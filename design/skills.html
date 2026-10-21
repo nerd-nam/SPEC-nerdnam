@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S02 기술스택 입력 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+        <span class="brand__name">nerdnam</span>
+      </a>
+      <a class="header-link" href="library.html">저장하고 나중에 하기</a>
+    </div>
+  </header>
+
+  <main class="page page--narrow">
+    <nav aria-label="온보딩 단계">
+      <ol class="stepper">
+        <li class="step step--current" aria-current="step"><span class="step__dot">1</span>기술스택</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">2</span>경력</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">3</span>프로젝트</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">4</span>검토·확정</li>
+      </ol>
+    </nav>
+
+    <div class="page-head__text">
+      <h1 class="page-title">기술스택을 알려주세요</h1>
+      <p class="page-desc">공고 문구와 정확히 맞추기 위해 기술명은 표준 이름으로 저장돼요. 예: react.js, 리액트 → React</p>
+    </div>
+
+    <section class="card" aria-labelledby="add-title">
+      <h2 id="add-title" class="card__title">기술 추가</h2>
+      <div class="row" role="tablist" aria-label="카테고리" id="cat-tabs"></div>
+      <div class="input-wrap">
+        <label for="skill-search" class="sr-only">기술 이름 검색</label>
+        <svg class="i" aria-hidden="true"><use href="#i-search"></use></svg>
+        <input id="skill-search" class="input" type="search" placeholder="기술 이름으로 검색 (예: spring, k8s)">
+      </div>
+      <div class="stack" style="gap: 10px">
+        <span style="font-size: 13px; font-weight: 600; color: var(--subtle)"><span id="cat-name"></span>에서 자주 쓰는 기술</span>
+        <div class="row" id="suggestions"></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="list-title">
+      <div class="row row--between" style="align-items: baseline">
+        <h2 id="list-title" class="card__title">추가한 기술 <span style="color: var(--accent)" id="skill-count"></span></h2>
+      </div>
+      <dl class="grid-4" aria-label="숙련도 기준" style="margin: 0; gap: 8px">
+        <div class="level-def"><dt>1 · 학습 중</dt><dd>공부했거나 개인 프로젝트에서 써 봤어요</dd></div>
+        <div class="level-def"><dt>2 · 실무 사용</dt><dd>업무에서 써 봤고, 막히면 찾아보며 해결해요</dd></div>
+        <div class="level-def"><dt>3 · 능숙</dt><dd>설계부터 문제 해결까지 혼자 할 수 있어요</dd></div>
+        <div class="level-def"><dt>4 · 전문가</dt><dd>팀의 기준을 정하고 다른 사람을 가르쳐요</dd></div>
+      </dl>
+      <div class="table-wrap">
+        <table class="table table--plain" style="min-width: 560px">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 30%">기술</th>
+              <th scope="col" style="width: 20%">카테고리</th>
+              <th scope="col" style="width: 42%">숙련도</th>
+              <th scope="col" style="width: 8%"><span class="sr-only">삭제</span></th>
+            </tr>
+          </thead>
+          <tbody id="skill-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="actions">
+      <a class="btn" href="index.html">이전</a>
+      <a class="btn btn--primary" href="career.html">다음: 경력 입력 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/skills.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S01 시작하기 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div style="min-height: 100vh; display: flex; flex-direction: column">
+    <header class="header">
+      <div class="header__inner">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <a class="header-link" href="#start">로그인</a>
+      </div>
+    </header>
+
+    <main class="page" style="flex: 1; width: 100%; padding-top: 72px">
+      <div class="split" style="gap: 56px">
+        <section class="split__main" style="gap: 32px">
+          <div class="stack" style="gap: 20px">
+            <p style="font-size: 15px; font-weight: 600; color: var(--accent)">개발자를 위한 지원서 코치</p>
+            <h1 style="font-size: 46px; line-height: 1.22; font-weight: 700; letter-spacing: -0.02em">경험은 한 번 정리하고,<br>방향은 공고마다.</h1>
+            <p style="max-width: 560px; font-size: 18px; line-height: 1.65; color: var(--muted)">기술스택·경력·프로젝트를 한 번 정리해 두면, 채용공고의 필수·우대사항마다 근거가 되는 내 경험을 찾아 지원동기부터 경력기술서까지 쓸 방향을 잡아 드려요.</p>
+          </div>
+
+          <ol class="plain grid-3" style="gap: 16px">
+            <li class="card card--sm" style="gap: 10px">
+              <span style="font-size: 13px; font-weight: 700; color: var(--accent)">01</span>
+              <strong style="font-size: 16px">내 경험 정리</strong>
+              <span class="card__desc" style="line-height: 1.6">프로젝트를 [문제]-[해결]-[결과]로 다듬고, 내가 확인한 내용만 저장해요.</span>
+              <span class="page-meta" style="font-size: 13px">처음 한 번 · 약 15분</span>
+            </li>
+            <li class="card card--sm" style="gap: 10px">
+              <span style="font-size: 13px; font-weight: 700; color: var(--accent)">02</span>
+              <strong style="font-size: 16px">공고 붙여넣기</strong>
+              <span class="card__desc" style="line-height: 1.6">필수사항과 우대사항을 자동으로 나누고 항목 단위로 쪼개요.</span>
+              <span class="page-meta" style="font-size: 13px">공고마다</span>
+            </li>
+            <li class="card card--sm" style="gap: 10px">
+              <span style="font-size: 13px; font-weight: 700; color: var(--accent)">03</span>
+              <strong style="font-size: 16px">작성 방향 받기</strong>
+              <span class="card__desc" style="line-height: 1.6">요건별 근거 경험, 서류 4종의 방향, 포트폴리오 이미지 프롬프트까지.</span>
+              <span class="page-meta" style="font-size: 13px">약 1분</span>
+            </li>
+          </ol>
+
+          <p class="row" style="gap: 10px; font-size: 15px; color: var(--muted)">
+            <svg class="i" style="color: var(--ok)" aria-hidden="true"><use href="#i-shield"></use></svg>
+            없는 경험은 만들지 않아요. 모든 제안에 내 경험의 출처가 붙어요.
+          </p>
+        </section>
+
+        <section id="start" class="split__side card card--lg" aria-labelledby="start-title" style="gap: 20px; flex-basis: 380px">
+          <div class="stack stack--sm" style="gap: 6px">
+            <h2 id="start-title" style="font-size: 22px; font-weight: 700">시작하기</h2>
+            <p class="card__desc" style="font-size: 15px">계정을 연결하면 바로 경험 정리를 시작해요.</p>
+          </div>
+          <div class="stack" style="gap: 10px">
+            <a class="btn btn--lg" href="skills.html">Google 계정으로 계속</a>
+            <a class="btn btn--lg" href="skills.html">카카오 계정으로 계속</a>
+          </div>
+          <div class="row" style="gap: 12px; flex-wrap: nowrap; font-size: 13px; color: var(--subtle)">
+            <span style="flex: 1; height: 1px; background: var(--line)"></span>또는<span style="flex: 1; height: 1px; background: var(--line)"></span>
+          </div>
+          <div>
+            <label class="label" for="email">이메일</label>
+            <input id="email" class="input" type="email" placeholder="name@example.com" autocomplete="email">
+          </div>
+          <label class="check">
+            <input type="checkbox" checked>
+            <span>[필수] 개인정보 수집·이용에 동의합니다. <a href="#privacy">내용 보기</a></span>
+          </label>
+          <p id="privacy" class="callout callout--muted">입력한 이력은 내 계정 안에서만 검색에 쓰여요. 탈퇴하면 원본과 검색용 데이터가 함께 삭제돼요.</p>
+          <a class="btn btn--primary btn--lg" href="skills.html">이메일로 시작하기</a>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <span>© nerdnam</span>
+        <a href="#privacy">개인정보 처리방침</a>
+        <a href="#terms">이용약관</a>
+      </div>
+    </footer>
+  </div>
+  <script src="assets/js/common.js"></script>
+</body>
+</html>

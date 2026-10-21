@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>화면 목록 · nerdnam 디자인</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <main class="page page--mid">
+    <div class="page-head__text">
+      <p class="page-meta">nerdnam · 화면 디자인 v1.3 · 2026-10-21</p>
+      <h1 class="page-title">화면 목록</h1>
+      <p class="page-desc">각 화면은 버튼과 링크로 이어져 있어 S01부터 순서대로 눌러 볼 수 있어요. 데이터는 기획서 7장의 예시를 썼습니다.</p>
+    </div>
+
+    <section class="card" aria-labelledby="g1">
+      <h2 id="g1" class="card__title">① 내 경험 정리 · 처음 한 번</h2>
+      <div class="table-wrap">
+        <table class="table table--boxed">
+          <thead><tr><th scope="col">ID</th><th scope="col">화면</th><th scope="col">직접 조작할 수 있는 부분</th><th scope="col">기능</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-muted">S01</td><td><a href="index.html" class="cell-strong">시작하기</a></td><td class="cell-muted">소셜·이메일 시작, 개인정보 동의</td><td class="cell-muted">-</td></tr>
+            <tr><td class="cell-muted">S02</td><td><a href="skills.html" class="cell-strong">기술스택 입력</a></td><td class="cell-muted">카테고리 탭, 추천 기술 추가, 숙련도 4단계 변경, 삭제</td><td class="cell-muted">F1</td></tr>
+            <tr><td class="cell-muted">S03</td><td><a href="career.html" class="cell-strong">경력 입력</a></td><td class="cell-muted">사용 기술 선택, 재직 중 체크</td><td class="cell-muted">F1</td></tr>
+            <tr><td class="cell-muted">S04</td><td><a href="project.html" class="cell-strong">프로젝트 입력</a></td><td class="cell-muted">사용 기술 선택, 본문 글자 수, 작성 가이드</td><td class="cell-muted">F1</td></tr>
+            <tr><td class="cell-muted">S05</td><td><a href="review.html" class="cell-strong">재구성 검토</a></td><td class="cell-muted">사례 펼치기, 사례별 확정·제외·되돌리기, 버전 전환, 확인 필요 처리, 프로젝트 확정 조건</td><td class="cell-muted">F2</td></tr>
+            <tr><td class="cell-muted">S06</td><td><a href="library.html" class="cell-strong">내 경험 라이브러리</a></td><td class="cell-muted">확정·초안 상태, 경력·기술 요약</td><td class="cell-muted">F3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="g2">
+      <h2 id="g2" class="card__title">② 공고별 지원 준비 · 공고마다 반복</h2>
+      <div class="table-wrap">
+        <table class="table table--boxed">
+          <thead><tr><th scope="col">ID</th><th scope="col">화면</th><th scope="col">직접 조작할 수 있는 부분</th><th scope="col">기능</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-muted">S07</td><td><a href="jd.html" class="cell-strong">JD 입력</a></td><td class="cell-muted">고정 양식에 직접 입력(필수·우대·주요 업무·회사 소개), Enter로 줄 추가, 여러 줄 붙여넣기 자동 분할, 검증. 상태별: <a href="jd.html#empty">빈 양식</a> · <a href="jd.html#filled">입력 완료</a> · <a href="jd.html#invalid">입력 오류</a></td><td class="cell-muted">F4</td></tr>
+            <tr><td class="cell-muted">S08</td><td><a href="report.html" class="cell-strong">적합도 리포트</a></td><td class="cell-muted">판정 필터, 근거 링크, 갭 대응 가이드</td><td class="cell-muted">F5</td></tr>
+            <tr><td class="cell-muted">S09-1</td><td><a href="guide.html#motive" class="cell-strong">작성 방향 · 지원동기</a></td><td class="cell-muted">핵심 메시지, 문단 구성, 복사</td><td class="cell-muted">F5</td></tr>
+            <tr><td class="cell-muted">S09-2</td><td><a href="guide.html#intro" class="cell-strong">작성 방향 · 자기소개</a></td><td class="cell-muted">+ 요건 커버리지 표</td><td class="cell-muted">F5</td></tr>
+            <tr><td class="cell-muted">S09-3</td><td><a href="guide.html#portfolio" class="cell-strong">작성 방향 · 포트폴리오</a></td><td class="cell-muted">+ 6쪽 페이지 흐름 썸네일</td><td class="cell-muted">F5</td></tr>
+            <tr><td class="cell-muted">S09-4</td><td><a href="guide.html#career" class="cell-strong">작성 방향 · 경력기술서</a></td><td class="cell-muted">+ 공고 용어로 바꿔 쓰기, 미리보기</td><td class="cell-muted">F5</td></tr>
+            <tr><td class="cell-muted">S09-5</td><td><a href="guide.html#image" class="cell-strong">작성 방향 · 이미지 프롬프트</a></td><td class="cell-muted">프롬프트 복사, 도구로 만들 시각자료</td><td class="cell-muted">F6</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="assets/js/common.js"></script>
+</body>
+</html>

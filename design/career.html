@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S03 경력 입력 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+        <span class="brand__name">nerdnam</span>
+      </a>
+      <a class="header-link" href="library.html">저장하고 나중에 하기</a>
+    </div>
+  </header>
+
+  <main class="page page--mid">
+    <nav aria-label="온보딩 단계">
+      <ol class="stepper">
+        <li><a class="step step--done step-link" href="skills.html" title="기술스택 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">기술스택</span><span class="step-edit">수정</span></a></li>
+        <li class="step-line step-line--done" aria-hidden="true"></li>
+        <li class="step step--current" aria-current="step"><span class="step__dot">2</span>경력</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">3</span>프로젝트</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">4</span>검토·확정</li>
+      </ol>
+    </nav>
+
+    <div class="page-head">
+      <div class="page-head__text">
+        <h1 class="page-title">경력을 입력해 주세요</h1>
+        <p class="page-desc">최근 경력부터 적어 주세요. 공고의 연차 조건은 여기 적은 재직기간으로 계산해요.</p>
+      </div>
+      <a href="project.html" style="font-size: 14px; font-weight: 500">경력이 없어요 (건너뛰기)</a>
+    </div>
+
+    <div class="split">
+      <section class="split__side" aria-labelledby="career-list" style="gap: 12px; flex-basis: 300px">
+        <h2 id="career-list" style="font-size: 14px; font-weight: 600; color: var(--subtle)">경력 2건</h2>
+        <button class="card card--sm" aria-pressed="true" style="text-align: left; cursor: pointer; border: 2px solid var(--accent); gap: 6px">
+          <span class="row row--between" style="width: 100%"><strong style="font-size: 16px">OO커머스</strong><span class="badge badge--info">재직 중</span></span>
+          <span class="card__desc">결제플랫폼팀 · 백엔드 개발자</span>
+          <span class="page-meta" style="font-size: 13px">2023.03 – 현재</span>
+        </button>
+        <button class="card card--sm" aria-pressed="false" style="text-align: left; cursor: pointer; gap: 6px">
+          <strong style="font-size: 16px">[이전 회사명]</strong>
+          <span class="card__desc">[부서] · 백엔드 개발자</span>
+          <span class="page-meta" style="font-size: 13px">[시작] – [종료]</span>
+        </button>
+        <button class="btn btn--block card--dashed" style="min-height: 52px; border-radius: 14px; border-style: dashed; color: var(--accent)">
+          <svg class="i" aria-hidden="true"><use href="#i-plus"></use></svg>경력 추가
+        </button>
+      </section>
+
+      <section class="split__main card card--lg" aria-labelledby="form-title">
+        <h2 id="form-title" style="font-size: 18px; font-weight: 700">OO커머스</h2>
+        <div class="grid-2">
+          <div><label class="label" for="company">회사명</label><input id="company" class="input" value="OO커머스"></div>
+          <div><label class="label" for="team">부서</label><input id="team" class="input" value="결제플랫폼팀"></div>
+          <div><label class="label" for="role">직무</label><input id="role" class="input" value="백엔드 개발자"></div>
+          <div><label class="label" for="rank">직급 <span class="label__hint">(선택)</span></label><input id="rank" class="input" value="선임"></div>
+          <div>
+            <label class="label" for="type">고용형태</label>
+            <select id="type" class="input"><option selected>정규직</option><option>계약직</option><option>인턴</option><option>프리랜서</option></select>
+          </div>
+          <div>
+            <span class="label">재직기간</span>
+            <div class="range">
+              <label for="start" class="sr-only">시작 월</label><input id="start" class="input" type="month" value="2023-03">
+              <span aria-hidden="true" style="color: var(--subtle)">–</span>
+              <label for="end" class="sr-only">종료 월</label><input id="end" class="input" type="month" disabled>
+            </div>
+            <label class="check" style="margin-top: 10px; align-items: center"><input id="current" type="checkbox" checked>재직 중</label>
+          </div>
+        </div>
+
+        <fieldset class="stack" style="gap: 10px">
+          <legend class="row row--between" style="width: 100%; margin-bottom: 4px; font-size: 14px; font-weight: 600">주요 업무 <span class="label__hint" style="font-weight: 400">3 / 5줄</span></legend>
+          <div class="row" style="flex-wrap: nowrap; gap: 10px"><span style="width: 20px; font-size: 13px; color: var(--subtle)">1</span><label for="duty1" class="sr-only">주요 업무 1</label><input id="duty1" class="input" value="결제 승인·취소 API 설계와 운영"></div>
+          <div class="row" style="flex-wrap: nowrap; gap: 10px"><span style="width: 20px; font-size: 13px; color: var(--subtle)">2</span><label for="duty2" class="sr-only">주요 업무 2</label><input id="duty2" class="input" value="정산 배치 개발과 쿼리 성능 개선"></div>
+          <div class="row" style="flex-wrap: nowrap; gap: 10px"><span style="width: 20px; font-size: 13px; color: var(--subtle)">3</span><label for="duty3" class="sr-only">주요 업무 3</label><input id="duty3" class="input" placeholder="한 줄에 업무 하나씩 적어 주세요"></div>
+          <button class="btn btn--text" style="align-self: flex-start"><svg class="i i--sm" aria-hidden="true"><use href="#i-plus"></use></svg>줄 추가</button>
+        </fieldset>
+
+        <fieldset class="stack" style="gap: 10px">
+          <legend style="margin-bottom: 4px; font-size: 14px; font-weight: 600">이 회사에서 쓴 기술 <span class="label__hint" style="font-weight: 400">· 기술스택에서 선택</span></legend>
+          <div class="row" id="tech-chips"></div>
+        </fieldset>
+
+        <div class="row row--end" style="padding-top: 8px; border-top: 1px solid var(--line); gap: 10px">
+          <button class="btn btn--danger">삭제</button>
+          <button class="btn">저장</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="skills.html">이전</a>
+      <a class="btn btn--primary" href="project.html">다음: 프로젝트 입력 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/career.js"></script>
+</body>
+</html>

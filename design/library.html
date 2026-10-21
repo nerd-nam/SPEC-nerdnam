@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S06 내 경험 라이브러리 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__left">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <nav class="nav" aria-label="주 메뉴">
+          <a href="library.html" aria-current="page">내 경험</a>
+          <a href="jd.html">지원 준비</a>
+        </nav>
+      </div>
+      <button class="avatar" aria-label="계정 메뉴">김</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div class="page-head__text">
+        <h1 class="page-title">내 경험</h1>
+        <p class="page-desc">지원서의 근거로 쓰이는 데이터예요. 확정된 항목만 공고 매칭에 쓰여요.</p>
+      </div>
+      <a class="btn btn--primary" href="jd.html"><svg class="i" aria-hidden="true"><use href="#i-plus"></use></svg>새 공고로 지원 준비</a>
+    </div>
+
+    <dl class="grid-4" style="margin: 0">
+      <div class="stat"><dt>기술</dt><dd>7</dd></div>
+      <div class="stat"><dt>경력</dt><dd>2</dd></div>
+      <div class="stat"><dt>확정 프로젝트</dt><dd>2 <span class="stat__sub">/ 3</span></dd></div>
+      <div class="stat"><dt>확정한 사례</dt><dd>3</dd></div>
+    </dl>
+
+    <div class="split">
+      <section class="split__main" aria-labelledby="proj-title" style="gap: 12px">
+        <h2 id="proj-title" class="card__title">프로젝트</h2>
+
+        <article class="card" style="padding: 22px; gap: 14px">
+          <div class="row row--between" style="align-items: flex-start; gap: 10px">
+            <div class="stack" style="gap: 6px">
+              <div class="row"><span class="badge badge--ok"><svg class="i i--sm i--bold" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-check"></use></svg>확정 · 사례 2개</span><span class="page-meta" style="font-size: 13px">OO커머스 · 2024.05 – 2024.09</span></div>
+              <h3 style="font-size: 18px; font-weight: 700">결제 승인 API 성능 개선</h3>
+            </div>
+            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html">보기</a><a class="btn btn--sm" href="project.html">수정</a></div>
+          </div>
+          <ul class="plain stack" style="gap: 8px; font-size: 14px; line-height: 1.55">
+            <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 1</span><span><strong style="font-weight: 600">결제 승인 응답 지연 개선</strong><br><span class="cell-muted">응답 1.2초·결제 이탈 → Redis 캐시, Kafka 비동기 분리 → 평균 응답 0.3초, 피크 처리량 약 2배</span></span></li>
+            <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 2</span><span><strong style="font-weight: 600">프로모션 전 부하 테스트 절차 도입</strong><br><span class="cell-muted">문제를 운영 중에야 발견 → 부하 테스트 절차·장애 대응 매뉴얼 → [확인한 결과]</span></span></li>
+          </ul>
+          <div class="row" style="gap: 6px"><span class="tag">Spring Boot</span><span class="tag">Redis</span><span class="tag">Kafka</span></div>
+        </article>
+
+        <article class="card" style="padding: 22px; gap: 14px">
+          <div class="row row--between" style="align-items: flex-start; gap: 10px">
+            <div class="stack" style="gap: 6px">
+              <div class="row"><span class="badge badge--ok"><svg class="i i--sm i--bold" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-check"></use></svg>확정 · 사례 1개</span><span class="page-meta" style="font-size: 13px">OO커머스</span></div>
+              <h3 style="font-size: 18px; font-weight: 700">정산 배치 쿼리 개선</h3>
+            </div>
+            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html">보기</a><a class="btn btn--sm" href="project.html">수정</a></div>
+          </div>
+          <ul class="plain stack" style="gap: 8px; font-size: 14px; line-height: 1.55">
+            <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 1</span><span><strong style="font-weight: 600">정산 배치 쿼리 개선</strong><br><span class="cell-muted">배치가 마감 시간을 넘김 → 실행 계획 분석, 인덱스 재설계 → [배치 처리 시간 변화]</span></span></li>
+          </ul>
+          <div class="row" style="gap: 6px"><span class="tag">Spring Batch</span><span class="tag">MySQL</span><span class="tag">JPA</span></div>
+        </article>
+
+        <article class="card card--dashed" style="padding: 22px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--warn">초안</span><span class="page-meta" style="font-size: 13px">아직 매칭에 쓰이지 않아요</span></div>
+            <h3 style="font-size: 18px; font-weight: 700">[세 번째 프로젝트 제목]</h3>
+          </div>
+          <a class="btn" href="review.html">재구성 검토하기 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </article>
+
+        <p class="note"><svg class="i" aria-hidden="true"><use href="#i-info"></use></svg>경험을 수정하면 재구성·확인을 다시 거친 뒤 매칭에 반영돼요.</p>
+      </section>
+
+      <aside class="split__side">
+        <section class="card card--sm" aria-labelledby="career-title" style="padding: 22px; gap: 14px">
+          <div class="row row--between"><h2 id="career-title" class="card__title card__title--sm">경력</h2><a href="career.html" style="font-size: 13px; font-weight: 600">편집</a></div>
+          <ul class="plain stack" style="gap: 14px">
+            <li class="stack" style="gap: 2px"><strong style="font-size: 15px">OO커머스</strong><span class="card__desc">결제플랫폼팀 · 백엔드 개발자</span><span class="page-meta" style="font-size: 13px">2023.03 – 현재</span></li>
+            <li class="stack" style="gap: 2px; padding-top: 14px; border-top: 1px solid var(--line)"><strong style="font-size: 15px">[이전 회사명]</strong><span class="card__desc">백엔드 개발자</span><span class="page-meta" style="font-size: 13px">[재직 기간]</span></li>
+          </ul>
+        </section>
+        <section class="card card--sm" aria-labelledby="skill-title" style="padding: 22px; gap: 14px">
+          <div class="row row--between"><h2 id="skill-title" class="card__title card__title--sm">기술스택</h2><a href="skills.html" style="font-size: 13px; font-weight: 600">편집</a></div>
+          <ul class="plain stack" style="gap: 10px; font-size: 14px">
+            <li class="row row--between"><span class="cell-strong">Java</span><span class="row" style="font-size: 13px; color: var(--subtle)">능숙<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">Spring Boot</span><span class="row" style="font-size: 13px; color: var(--subtle)">능숙<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">JPA</span><span class="row" style="font-size: 13px; color: var(--subtle)">능숙<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">MySQL</span><span class="row" style="font-size: 13px; color: var(--subtle)">능숙<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span class="is-on"></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">Redis</span><span class="row" style="font-size: 13px; color: var(--subtle)">실무 사용<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">Kafka</span><span class="row" style="font-size: 13px; color: var(--subtle)">실무 사용<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span></span><span></span></span></span></li>
+            <li class="row row--between"><span class="cell-strong">AWS</span><span class="row" style="font-size: 13px; color: var(--subtle)">실무 사용<span class="meter" aria-hidden="true"><span class="is-on"></span><span class="is-on"></span><span></span><span></span></span></span></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+</body>
+</html>

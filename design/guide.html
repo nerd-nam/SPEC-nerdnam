@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S09 작성 방향성 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__left">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <nav class="nav" aria-label="주 메뉴">
+          <a href="library.html">내 경험</a>
+          <a href="jd.html" aria-current="page">지원 준비</a>
+        </nav>
+      </div>
+      <button class="avatar" aria-label="계정 메뉴">김</button>
+    </div>
+  </header>
+
+  <main class="page page--tight">
+    <nav aria-label="지원 준비 단계">
+      <ol class="stepper">
+        <li class="step step--done"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>공고 입력</li>
+        <li class="step-line step-line--done" aria-hidden="true"></li>
+        <li class="step step--done"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>적합도 리포트</li>
+        <li class="step-line step-line--done" aria-hidden="true"></li>
+        <li class="step step--current" aria-current="step"><span class="step__dot">3</span>작성 방향</li>
+      </ol>
+    </nav>
+
+    <div class="page-head">
+      <div class="page-head__text">
+        <p class="page-meta">OO페이 · 백엔드 개발자 (결제 플랫폼)</p>
+        <h1 class="page-title">이 공고에 맞춘 작성 방향</h1>
+      </div>
+      <div class="row" style="gap: 10px">
+        <a class="btn" href="report.html">적합도 리포트</a>
+        <button class="btn">PDF로 내보내기</button>
+      </div>
+    </div>
+
+    <!-- 탭: guide.html#motive | #intro | #portfolio | #career | #image -->
+    <div class="tabs" role="tablist" aria-label="산출물" id="tabs"></div>
+
+    <div class="split">
+      <section class="split__main" role="tabpanel" id="panel" aria-labelledby="tab-motive" style="flex-basis: 640px"></section>
+
+      <aside class="split__side" style="flex-basis: 300px">
+        <section class="card card--sm" aria-labelledby="src-title" style="padding: 22px">
+          <h2 id="src-title" class="card__title card__title--sm">이 방향에 쓰인 근거</h2>
+          <p class="page-meta" style="font-size: 13px; line-height: 1.6">모든 제안은 확정된 내 경험에서만 나와요.</p>
+          <ul class="plain stack" style="gap: 10px; font-size: 14px">
+            <li class="row row--between"><a href="review.html" style="font-weight: 600">결제 승인 API 성능 개선</a><span class="page-meta">요건 3개</span></li>
+            <li class="row row--between"><a href="review.html" style="font-weight: 600">정산 배치 쿼리 개선</a><span class="page-meta">요건 1개</span></li>
+            <li class="row row--between"><a href="career.html" style="font-weight: 600">경력 · OO커머스</a><span class="page-meta">요건 2개</span></li>
+          </ul>
+        </section>
+        <section class="card card--sm" aria-labelledby="regen-title" style="padding: 22px">
+          <h2 id="regen-title" class="card__title card__title--sm">방향 바꾸기</h2>
+          <label for="tone" style="font-size: 14px; color: var(--muted)">원하는 방향을 알려 주면 이 탭만 다시 만들어요.</label>
+          <textarea id="tone" class="input" rows="3" style="font-size: 14px"></textarea>
+          <button class="btn"><svg class="i i--sm" aria-hidden="true"><use href="#i-refresh"></use></svg>이 탭 다시 만들기</button>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/guide-data.js"></script>
+  <script src="assets/js/guide.js"></script>
+</body>
+</html>

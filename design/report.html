@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S08 적합도 리포트 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__left">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <nav class="nav" aria-label="주 메뉴">
+          <a href="library.html">내 경험</a>
+          <a href="jd.html" aria-current="page">지원 준비</a>
+        </nav>
+      </div>
+      <button class="avatar" aria-label="계정 메뉴">김</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <nav aria-label="지원 준비 단계">
+      <ol class="stepper">
+        <li class="step step--done"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>공고 입력</li>
+        <li class="step-line step-line--done" aria-hidden="true"></li>
+        <li class="step step--current" aria-current="step"><span class="step__dot">2</span>적합도 리포트</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">3</span>작성 방향</li>
+      </ol>
+    </nav>
+
+    <div class="page-head">
+      <div class="page-head__text">
+        <p class="page-meta">OO페이 · 2026.10.21 분석</p>
+        <h1 class="page-title">백엔드 개발자 (결제 플랫폼)</h1>
+      </div>
+      <div class="row" style="gap: 10px">
+        <a class="btn" href="jd.html">공고 수정</a>
+        <a class="btn btn--primary" href="guide.html">작성 방향 보기 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+      </div>
+    </div>
+
+    <section class="row" aria-label="요약" style="gap: 16px; align-items: stretch">
+      <div class="card card--sm" style="flex: 1 1 280px; padding: 22px">
+        <span style="font-size: 14px; font-weight: 600; color: var(--muted)">필수사항</span>
+        <span class="score">3<span class="score__sub"> / 3 충족</span></span>
+        <div class="bar-row" style="grid-template-columns: repeat(3, minmax(0, 1fr))" aria-hidden="true"><span class="is-ok"></span><span class="is-ok"></span><span class="is-ok"></span></div>
+      </div>
+      <div class="card card--sm" style="flex: 1 1 280px; padding: 22px">
+        <span style="font-size: 14px; font-weight: 600; color: var(--muted)">우대사항</span>
+        <span class="score">1<span class="score__sub"> / 3 충족 · 부분 1</span></span>
+        <div class="bar-row" style="grid-template-columns: repeat(3, minmax(0, 1fr))" aria-hidden="true"><span class="is-ok"></span><span class="is-part"></span><span></span></div>
+      </div>
+      <div class="card card--dark card--sm" style="flex: 2 1 360px; padding: 22px; justify-content: center; gap: 8px">
+        <span class="card__label">한 줄 진단</span>
+        <p style="font-size: 17px; line-height: 1.6; font-weight: 500">필수 3개 모두 근거 경험이 있어요. 결제 승인 API 개선 경험이 가장 많은 요건(3개)을 뒷받침해요.</p>
+      </div>
+    </section>
+
+    <div class="split">
+      <section class="split__main card" aria-labelledby="req-title" style="flex-basis: 620px">
+        <div class="row row--between" style="gap: 12px">
+          <h2 id="req-title" class="card__title">요건별 판정</h2>
+          <div class="row" role="group" aria-label="판정 필터" style="gap: 6px" id="filters"></div>
+        </div>
+        <ul class="plain" id="req-rows"></ul>
+      </section>
+
+      <aside class="split__side card card--sm" aria-labelledby="gap-title" style="padding: 22px; gap: 16px">
+        <h2 id="gap-title" class="card__title card__title--sm">갭 대응 가이드</h2>
+        <div class="stack stack--sm" style="padding-bottom: 16px; border-bottom: 1px solid var(--line)">
+          <span style="font-size: 13px; font-weight: 700; color: var(--bad)">Kubernetes 운영 · 미충족</span>
+          <p style="font-size: 14px; line-height: 1.65">우대사항이라 지원에는 문제없어요. 학습 중이거나 개인 프로젝트가 있다면 포트폴리오 끝에 “학습 중”으로 따로 적으세요.</p>
+          <p class="page-meta" style="font-size: 13px">하지 말 것: 사용해 본 것처럼 쓰기</p>
+        </div>
+        <div class="stack stack--sm">
+          <span style="font-size: 13px; font-weight: 700; color: var(--warn)">결제·금융 도메인 · 부분 충족</span>
+          <p style="font-size: 14px; line-height: 1.65">커머스 결제 경험은 범위를 정확히 밝혀 쓰세요. “결제 승인·정산 시스템 운영”처럼 공고의 주요 업무와 겹치는 표현이 유리해요.</p>
+          <p class="page-meta" style="font-size: 13px">하지 말 것: 금융권 경험으로 부풀리기</p>
+        </div>
+        <a href="project.html" style="font-size: 14px; font-weight: 600">빠진 경험이 있다면 프로젝트 추가하기</a>
+      </aside>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/report.js"></script>
+</body>
+</html>

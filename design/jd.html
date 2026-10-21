@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S07 JD 입력 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- 상태별로 보기: jd.html#empty(빈 양식) | #filled(입력 완료) | #invalid(입력 오류) -->
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__left">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <nav class="nav" aria-label="주 메뉴">
+          <a href="library.html">내 경험</a>
+          <a href="jd.html" aria-current="page">지원 준비</a>
+        </nav>
+      </div>
+      <button class="avatar" aria-label="계정 메뉴">김</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <nav aria-label="지원 준비 단계">
+      <ol class="stepper">
+        <li class="step step--current" aria-current="step"><span class="step__dot">1</span>공고 입력</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">2</span>적합도 리포트</li>
+        <li class="step-line" aria-hidden="true"></li>
+        <li class="step"><span class="step__dot">3</span>작성 방향</li>
+      </ol>
+    </nav>
+
+    <div class="page-head__text">
+      <h1 class="page-title">지원할 공고를 입력해 주세요</h1>
+      <p class="page-desc">공고를 보면서 항목에 맞게 옮겨 적어 주세요. <span style="color: var(--bad)">*</span> 표시는 꼭 필요한 항목이에요.</p>
+    </div>
+
+    <div id="summary-error" role="alert" class="callout" style="background: var(--bad-soft)" hidden></div>
+
+    <div class="split">
+      <div class="split__main">
+        <section class="card" aria-labelledby="basic-title">
+          <h2 id="basic-title" class="card__title">기본 정보</h2>
+          <div class="grid-2">
+            <div>
+              <label class="label" for="company">회사명<span class="req" aria-hidden="true">*</span></label>
+              <input id="company" class="input" placeholder="예: OO페이" aria-describedby="company-err">
+              <p id="company-err" class="err" hidden>회사명을 입력해 주세요.</p>
+            </div>
+            <div>
+              <label class="label" for="position">포지션<span class="req" aria-hidden="true">*</span></label>
+              <input id="position" class="input" placeholder="예: 백엔드 개발자" aria-describedby="position-err">
+              <p id="position-err" class="err" hidden>포지션을 입력해 주세요.</p>
+            </div>
+            <div class="span-2">
+              <label class="label" for="url">공고 링크 <span class="label__hint">(선택 · 나중에 다시 보기용)</span></label>
+              <input id="url" class="input" type="url" placeholder="https://">
+            </div>
+          </div>
+        </section>
+
+        <div class="stack" id="sections"></div>
+
+        <section class="card" aria-labelledby="intro-title">
+          <div class="row row--between" style="align-items: baseline">
+            <h2 id="intro-title" class="card__title">회사 소개·인재상 <span class="label__hint" style="font-size: 14px">(선택)</span></h2>
+            <span class="page-meta" style="font-size: 13px">지원동기 작성에 써요</span>
+          </div>
+          <label for="intro" class="card__desc" style="line-height: 1.6">회사가 하는 일, 팀 소개, 인재상처럼 지원동기에 참고할 내용을 자유롭게 적어 주세요.</label>
+          <textarea id="intro" class="input" rows="4" placeholder="예: 온라인 결제와 정산 서비스를 만드는 핀테크 회사. 인재상: 데이터로 판단하는 사람"></textarea>
+        </section>
+      </div>
+
+      <aside class="split__side" aria-label="작성 가이드">
+        <section class="card card--sm" aria-labelledby="guide-title" style="padding: 22px; gap: 14px">
+          <h2 id="guide-title" class="card__title card__title--sm">이렇게 적으면 매칭이 정확해요</h2>
+          <ol class="plain stack" style="gap: 14px; font-size: 14px; line-height: 1.55">
+            <li class="row" style="flex-wrap: nowrap; align-items: flex-start; gap: 10px"><span class="num" style="width: 24px; height: 24px; font-size: 12px">1</span><span><strong>한 줄에 요건 하나</strong><br><span class="cell-muted">요건이 여러 개 섞여 있으면 줄을 나눠 주세요.</span></span></li>
+            <li class="row" style="flex-wrap: nowrap; align-items: flex-start; gap: 10px"><span class="num" style="width: 24px; height: 24px; font-size: 12px">2</span><span><strong>공고 문구를 그대로</strong><br><span class="cell-muted">요약하거나 바꾸지 않아야 기술명과 조건이 정확히 잡혀요.</span></span></li>
+            <li class="row" style="flex-wrap: nowrap; align-items: flex-start; gap: 10px"><span class="num" style="width: 24px; height: 24px; font-size: 12px">3</span><span><strong>연차는 숫자로</strong><br><span class="cell-muted">“3년 이상”처럼 적으면 경력 재직기간으로 계산해요.</span></span></li>
+          </ol>
+          <div class="stack" style="gap: 6px; background: var(--bg); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.55">
+            <span style="font-weight: 700">예시</span>
+            <span style="color: var(--bad)">✕ Java, Spring 3년 이상 및 RDBMS 튜닝 경험</span>
+            <span style="color: var(--ok)">○ Java/Spring 기반 개발 경력 3년 이상</span>
+            <span style="color: var(--ok)">○ RDBMS 설계 및 쿼리 튜닝 경험</span>
+          </div>
+        </section>
+        <section class="card card--sm" aria-labelledby="sum-title" style="padding: 22px">
+          <h2 id="sum-title" class="card__title card__title--sm">입력 현황</h2>
+          <dl style="margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; font-size: 14px">
+            <dt class="cell-muted">필수사항</dt><dd style="margin: 0; font-weight: 700"><span id="cnt-req">0</span>개</dd>
+            <dt class="cell-muted">우대사항</dt><dd style="margin: 0; font-weight: 700"><span id="cnt-pref">0</span>개</dd>
+            <dt class="cell-muted">주요 업무</dt><dd style="margin: 0; font-weight: 700"><span id="cnt-duty">0</span>개</dd>
+          </dl>
+          <p class="page-meta" style="font-size: 13px; line-height: 1.6">입력한 내용은 자동으로 임시 저장돼요.</p>
+        </section>
+      </aside>
+    </div>
+
+    <div class="actions" style="align-items: center">
+      <a class="btn" href="library.html">취소</a>
+      <div class="row" style="gap: 12px; justify-content: flex-end">
+        <span class="page-meta" style="font-size: 13px" id="submit-hint"></span>
+        <button class="btn btn--primary" id="submit">적합도 분석하기 <svg class="i" aria-hidden="true"><use href="#i-arrow"></use></svg></button>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/jd.js"></script>
+</body>
+</html>
