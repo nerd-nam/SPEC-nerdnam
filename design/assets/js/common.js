@@ -86,5 +86,25 @@
     });
   }
 
+  // S05 검토 중에 S02·S03으로 온 경우(주소 #reviewing): "다음" 대신 "검토로 돌아가기" (기획서 F2 검토 결과 유지 규칙, D-9)
+  // 원문 화면(S04)을 거치지 않고 검토로 돌아가야 검토 결과가 유지된다. S02·S03 사이를 오가는 링크(단계 표시, 이전)에도 #reviewing 을 이어 붙인다
+  if (location.hash === '#reviewing') {
+    var $next = document.querySelector('[data-next]');
+    if ($next) {
+      $next.setAttribute('href', 'review.html');
+      $next.innerHTML = icon('arrow') + '검토로 돌아가기';
+      $next.querySelector('.i').style.transform = 'scaleX(-1)';
+    }
+    document.querySelectorAll('a[href="skills.html"], a[href="career.html"]').forEach(function (a) {
+      a.setAttribute('href', a.getAttribute('href') + '#reviewing');
+    });
+    // 여기서 원문 화면(S04)으로 가면 검토 결과가 사라지므로 경고한다. 실제 화면은 S05와 같은 대화상자를 쓴다
+    document.querySelectorAll('a[href="project.html"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        if (!window.confirm('지금 나가면 검토한 내용이 사라져요.\n프로젝트를 확정하지 않으면 사례별 결정과 확인 질문 답변이 저장되지 않아요. 나갈까요?')) e.preventDefault();
+      });
+    });
+  }
+
   window.UI = { esc: esc, icon: icon, copyText: copyText, mountRating: mountRating };
 })();
