@@ -173,4 +173,9 @@
 
   var initial = location.hash.slice(1);
   render(validTab(initial) ? initial : 'motive');
+  UI.mountRating(document.getElementById('guide-rating'), {
+    name: 'guide-score',
+    legend: '이 작성 방향이 도움이 됐나요?',
+    placeholder: '예: 지원동기 방향이 너무 일반적이에요'
+  });
 })();

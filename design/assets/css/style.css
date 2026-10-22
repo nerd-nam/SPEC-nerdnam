@@ -374,6 +374,18 @@ legend { padding: 0; }
 .paper { border: 1px solid #D5D9E0; border-radius: 4px; padding: 28px 32px; background: #fff; box-shadow: 0 1px 3px rgba(21, 23, 28, 0.06); display: flex; flex-direction: column; gap: 14px; }
 .paper__head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
 
+/* 만족도 평가 (5점 별점) */
+.rating { display: flex; flex-direction: column; gap: 12px; }
+.rating > legend { margin-bottom: 4px; }
+.rating__stars { display: inline-flex; gap: 2px; }
+.rating__star { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--radius-sm); cursor: pointer; color: var(--line-strong); }
+.rating__star:hover { background: var(--surface-muted); }
+.rating__star.is-on { color: #E0A100; }
+.rating__star.is-on .i { fill: currentColor; }
+.rating__star:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 1px; }
+.rating__label { font-size: 14px; color: var(--muted); }
+.rating__done { font-size: 13px; color: var(--ok); }
+
 /* ---------- 5. 반응형 ---------- */
 @media (max-width: 720px) {
   .header__inner, .page, .footer__inner { padding-left: 16px; padding-right: 16px; }

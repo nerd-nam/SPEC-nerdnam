@@ -68,13 +68,17 @@
       <div style="flex: 999 1 420px; min-width: 0">
         <label id="fb-title" class="label" for="feedback">사례를 나눈 방식이 마음에 들지 않나요?</label>
         <textarea id="feedback" class="input" rows="2" placeholder="예: 부하 테스트 이야기는 사례 1에 합쳐 줘"></textarea>
+        <p id="resplit-hint" class="help">어떻게 나누면 좋을지 적어 주세요. 적은 내용을 반영해 사례를 새로 만들어요. 원문에 없는 사실은 추가되지 않아요.</p>
       </div>
       <div class="row row--end" style="flex: 1 1 auto; gap: 10px">
-        <button class="btn"><svg class="i i--sm" aria-hidden="true"><use href="#i-refresh"></use></svg>다시 나누기</button>
+        <button class="btn" id="resplit" disabled aria-describedby="resplit-hint"><svg class="i i--sm" aria-hidden="true"><use href="#i-refresh"></use></svg>다시 나누기</button>
         <a class="btn btn--primary" href="library.html" id="project-confirm"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg>프로젝트 확정</a>
       </div>
       <p class="page-meta" style="flex-basis: 100%; font-size: 13px" id="foot-note"></p>
     </section>
+
+    <!-- 사례 생성 평가: 프로젝트마다 한 번, 언제든 바꿀 수 있음 (기획서 9.1) -->
+    <section class="card card--sm" id="episode-rating" aria-label="사례 생성 평가" style="padding: 20px 24px"></section>
   </main>
 
   <script src="assets/js/common.js"></script>

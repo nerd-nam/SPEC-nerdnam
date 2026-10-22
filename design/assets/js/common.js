@@ -18,7 +18,8 @@
     image: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
     shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
     half: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/>',
-    restructure: '<path d="M4 7h10M4 12h16M4 17h7"/><path d="M17 4l3 3-3 3"/>'
+    restructure: '<path d="M4 7h10M4 12h16M4 17h7"/><path d="M17 4l3 3-3 3"/>',
+    star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>'
   };
 
   var sprite = '<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">' +
@@ -46,5 +47,44 @@
     return Promise.resolve();
   }
 
-  window.UI = { esc: esc, icon: icon, copyText: copyText };
+  // 만족도 평가: 5점 별점 + 한 줄 의견(선택). S05 사례 생성 평가, S09 방향 제시 평가에서 같이 쓴다 (기획서 9.1)
+  // 별은 라디오 버튼이라 키보드(화살표)로도 고를 수 있다. 보낸 뒤에도 언제든 바꿀 수 있고 마지막 값만 남는다.
+  var SCORE_LABELS = ['매우 아쉬워요', '아쉬워요', '보통이에요', '도움됐어요', '아주 도움됐어요'];
+  function mountRating(el, opts) {
+    var name = opts.name;
+    el.innerHTML =
+      '<fieldset class="rating">' +
+      '<legend class="card__title card__title--sm">' + esc(opts.legend) + '</legend>' +
+      '<div class="row" style="gap: 12px">' +
+      '<div class="rating__stars">' + [1, 2, 3, 4, 5].map(function (n) {
+        return '<label class="rating__star"><input type="radio" class="sr-only" name="' + name + '" value="' + n + '">' +
+          icon('star', 'i--lg') + '<span class="sr-only">' + n + '점 · ' + SCORE_LABELS[n - 1] + '</span></label>';
+      }).join('') + '</div>' +
+      '<span class="rating__label" aria-live="polite">별을 눌러 평가해 주세요</span></div>' +
+      '<div class="row"><label class="sr-only" for="' + name + '-comment">한 줄 의견 (선택)</label>' +
+      '<input id="' + name + '-comment" class="input" placeholder="' + esc(opts.placeholder) + '" style="flex: 1 1 220px; width: auto">' +
+      '<button class="btn btn--sm" data-rating-send disabled>보내기</button></div>' +
+      '<p class="rating__done" role="status" hidden></p>' +
+      '</fieldset>';
+
+    var stars = el.querySelectorAll('.rating__star');
+    var $label = el.querySelector('.rating__label');
+    var $send = el.querySelector('[data-rating-send]');
+    var $done = el.querySelector('.rating__done');
+    el.addEventListener('change', function (e) {
+      if (e.target.name !== name) return;
+      var v = +e.target.value;
+      stars.forEach(function (s, i) { s.classList.toggle('is-on', i < v); });
+      $label.textContent = v + '점 · ' + SCORE_LABELS[v - 1];
+      $send.disabled = false;
+      $done.hidden = true;
+    });
+    $send.addEventListener('click', function () {
+      $done.textContent = '평가를 보냈어요. 언제든 바꿀 수 있어요.';
+      $done.hidden = false;
+      $send.textContent = '다시 보내기';
+    });
+  }
+
+  window.UI = { esc: esc, icon: icon, copyText: copyText, mountRating: mountRating };
 })();
