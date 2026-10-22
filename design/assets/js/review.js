@@ -160,5 +160,16 @@
     render();
   });
 
+  // 다시 나누기: 피드백이 있어야 누를 수 있다 (기획서 F2)
+  var $feedback = document.getElementById('feedback');
+  var $resplit = document.getElementById('resplit');
+  $feedback.addEventListener('input', function () { $resplit.disabled = !$feedback.value.trim(); });
+
+  UI.mountRating(document.getElementById('episode-rating'), {
+    name: 'episode-score',
+    legend: 'AI가 나눈 사례는 어땠나요?',
+    placeholder: '예: 사례를 너무 잘게 나눴어요'
+  });
+
   render();
 })();
