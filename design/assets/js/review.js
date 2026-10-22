@@ -165,6 +165,23 @@
   var $resplit = document.getElementById('resplit');
   $feedback.addEventListener('input', function () { $resplit.disabled = !$feedback.value.trim(); });
 
+  // 확정 전에 S04(원문 화면)나 온보딩 밖으로 나가는 링크는 경고 후 이동 (기획서 F2 검토 결과 유지 규칙)
+  // S02·S03(#reviewing)으로 가는 링크와 프로젝트 확정 버튼은 경고하지 않는다
+  var $modal = document.getElementById('leave-modal');
+  var $leaveConfirm = document.getElementById('leave-confirm');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href]');
+    if (!a || a.id === 'project-confirm' || a.id === 'leave-confirm') return;
+    var href = a.getAttribute('href');
+    if (href.charAt(0) === '#' || href.indexOf('#reviewing') !== -1) return;
+    e.preventDefault();
+    $leaveConfirm.setAttribute('href', href);
+    $modal.hidden = false;
+    document.getElementById('leave-cancel').focus();
+  });
+  document.getElementById('leave-cancel').addEventListener('click', function () { $modal.hidden = true; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $modal.hidden = true; });
+
   UI.mountRating(document.getElementById('episode-rating'), {
     name: 'episode-score',
     legend: 'AI가 나눈 사례는 어땠나요?',
