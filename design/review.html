@@ -22,9 +22,9 @@
   <main class="page page--tight">
     <nav aria-label="온보딩 단계">
       <ol class="stepper">
-        <li><a class="step step--done step-link" href="skills.html" title="기술스택 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">기술스택</span><span class="step-edit">수정</span></a></li>
+        <li><a class="step step--done step-link" href="skills.html#reviewing" title="기술스택 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">기술스택</span><span class="step-edit">수정</span></a></li>
         <li class="step-line step-line--done" aria-hidden="true"></li>
-        <li><a class="step step--done step-link" href="career.html" title="경력 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">경력</span><span class="step-edit">수정</span></a></li>
+        <li><a class="step step--done step-link" href="career.html#reviewing" title="경력 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">경력</span><span class="step-edit">수정</span></a></li>
         <li class="step-line step-line--done" aria-hidden="true"></li>
         <li><a class="step step--done step-link" href="project.html" title="프로젝트 수정하기"><span class="step__dot"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span><span class="step-text">프로젝트</span><span class="step-edit">수정</span></a></li>
         <li class="step-line step-line--done" aria-hidden="true"></li>
@@ -80,6 +80,18 @@
     <!-- 사례 생성 평가: 프로젝트마다 한 번, 언제든 바꿀 수 있음 (기획서 9.1) -->
     <section class="card card--sm" id="episode-rating" aria-label="사례 생성 평가" style="padding: 20px 24px"></section>
   </main>
+
+  <!-- 확정 전에 S04(원문 화면)나 온보딩 밖으로 나갈 때 경고 (기획서 F2 검토 결과 유지 규칙). S02·S03으로 가는 링크는 경고하지 않는다 -->
+  <div class="modal" id="leave-modal" role="dialog" aria-modal="true" aria-labelledby="leave-title" hidden>
+    <div class="modal__box">
+      <h2 id="leave-title" class="card__title">지금 나가면 검토한 내용이 사라져요</h2>
+      <p class="card__desc" style="line-height: 1.6">프로젝트를 확정하지 않으면 사례별 결정과 확인 질문 답변이 저장되지 않아요. 다시 보려면 원문 화면에서 재구성을 다시 해야 해요.</p>
+      <div class="row row--end" style="margin-top: 6px">
+        <button class="btn" id="leave-cancel">계속 검토하기</button>
+        <a class="btn btn--danger" id="leave-confirm" href="#">나가기</a>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/common.js"></script>
   <script src="assets/js/review.js"></script>
