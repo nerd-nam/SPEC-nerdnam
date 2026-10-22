@@ -48,8 +48,8 @@
 
   function statusBadge(ep) {
     var s = state.status[ep.id];
-    if (s === 'confirmed') return '<span class="badge badge--ok">' + icon('check', 'i--sm i--bold') + '확정</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">되돌리기</button>';
-    if (s === 'excluded') return '<span class="badge badge--muted">제외 · 저장 안 함</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">되돌리기</button>';
+    if (s === 'confirmed') return '<span class="badge badge--ok">' + icon('check', 'i--sm i--bold') + '확정</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">다시 검토하기</button>';
+    if (s === 'excluded') return '<span class="badge badge--muted">제외 · 저장 안 함</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">다시 검토하기</button>';
     var n = pendingUnverified(ep).length;
     return n ? '<span class="badge badge--warn">' + icon('alert', 'i--sm') + '확인 필요 ' + n + '</span>' : '<span class="badge badge--info">확정 대기</span>';
   }
@@ -64,6 +64,12 @@
           var label = k === keys[keys.length - 1] ? 'v' + k + ' · 최신' : 'v' + k;
           return '<button role="tab" aria-selected="' + (k === v) + '" data-act="ver" data-id="' + ep.id + '" data-ver="' + k + '" style="min-height: 32px; font-size: 13px">' + label + '</button>';
         }).join('') + '</div>'
+      : '';
+    var latest = keys[keys.length - 1];
+    var olderNote = v !== latest
+      ? '<div class="callout callout--muted" style="align-items: center; justify-content: space-between; flex-wrap: wrap">' +
+        '<span>이전 버전(v' + v + ')을 보고 있어요. 지금 쓰는 내용은 최신 버전(v' + latest + ')이에요.</span>' +
+        '<button class="btn btn--sm" data-act="use-ver" data-id="' + ep.id + '" data-ver="' + v + '">이 버전으로 바꾸기</button></div>'
       : '';
 
     var metrics = data.metrics.length
@@ -85,6 +91,7 @@
     return '<div class="ep__body">' +
       '<div class="row row--between" style="gap: 12px"><div class="row" style="gap: 6px; font-size: 13px; color: var(--muted)"><span>' + esc(ep.role) + '</span>' +
       ep.skills.map(function (s) { return '<span class="tag">' + esc(s) + '</span>'; }).join('') + '</div>' + versionTabs + '</div>' +
+      olderNote +
       '<div class="stack" style="gap: 6px"><h3 class="ep__label">[문제]</h3><p class="ep__text">' + esc(ep.problem) + '</p></div>' +
       '<div class="stack" style="gap: 6px"><h3 class="ep__label">[해결]</h3><p class="ep__text">' + esc(ep.solution) + '</p></div>' +
       '<div class="stack" style="gap: 8px"><h3 class="ep__label row">[결과]' + (ep.id === 1 && v === 2 ? ' <span class="badge badge--info">v1에서 바뀜</span>' : '') + '</h3>' +
@@ -141,6 +148,14 @@
       case 'confirm': state.status[id] = 'confirmed'; state.open = nextOpen(id); break;
       case 'exclude': state.status[id] = 'excluded'; state.open = nextOpen(id); break;
       case 'undo': state.status[id] = 'review'; state.open = id; break;
+      case 'use-ver': {
+        // 고른 이전 버전의 내용을 새 최신 버전으로 복사 (이전 버전들은 그대로 남음)
+        var ep = EPISODES.filter(function (e) { return e.id === id; })[0];
+        var next = Math.max.apply(null, Object.keys(ep.versions).map(Number)) + 1;
+        ep.versions[next] = ep.versions[+b.dataset.ver];
+        state.ver[id] = next;
+        break;
+      }
     }
     render();
   });
