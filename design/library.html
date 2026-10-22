@@ -51,7 +51,7 @@
               <div class="row"><span class="badge badge--ok"><svg class="i i--sm i--bold" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-check"></use></svg>확정 · 사례 2개</span><span class="page-meta" style="font-size: 13px">OO커머스 · 2024.05 – 2024.09</span></div>
               <h3 style="font-size: 18px; font-weight: 700">결제 승인 API 성능 개선</h3>
             </div>
-            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html">보기</a><a class="btn btn--sm" href="project.html">수정</a></div>
+            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html#confirmed">보기</a><button class="btn btn--sm" data-reregister>수정</button></div>
           </div>
           <ul class="plain stack" style="gap: 8px; font-size: 14px; line-height: 1.55">
             <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 1</span><span><strong style="font-weight: 600">결제 승인 응답 지연 개선</strong><br><span class="cell-muted">응답 1.2초·결제 이탈 → Redis 캐시, Kafka 비동기 분리 → 평균 응답 0.3초, 피크 처리량 약 2배</span></span></li>
@@ -66,7 +66,7 @@
               <div class="row"><span class="badge badge--ok"><svg class="i i--sm i--bold" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-check"></use></svg>확정 · 사례 1개</span><span class="page-meta" style="font-size: 13px">OO커머스</span></div>
               <h3 style="font-size: 18px; font-weight: 700">정산 배치 쿼리 개선</h3>
             </div>
-            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html">보기</a><a class="btn btn--sm" href="project.html">수정</a></div>
+            <div class="row" style="gap: 6px"><a class="btn btn--sm" href="review.html#confirmed">보기</a><button class="btn btn--sm" data-reregister>수정</button></div>
           </div>
           <ul class="plain stack" style="gap: 8px; font-size: 14px; line-height: 1.55">
             <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 1</span><span><strong style="font-weight: 600">정산 배치 쿼리 개선</strong><br><span class="cell-muted">배치가 마감 시간을 넘김 → 실행 계획 분석, 인덱스 재설계 → [배치 처리 시간 변화]</span></span></li>
@@ -79,7 +79,31 @@
             <div class="row"><span class="badge badge--warn">초안</span><span class="page-meta" style="font-size: 13px">아직 매칭에 쓰이지 않아요</span></div>
             <h3 style="font-size: 18px; font-weight: 700">[세 번째 프로젝트 제목]</h3>
           </div>
-          <a class="btn" href="review.html">재구성 검토하기 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+          <!-- 초안은 검토 결과가 없어 S04에서 재구성을 눌러야 한다 (기획서 v1.14 검토 결과 유지 규칙) -->
+          <a class="btn" href="project.html">이어서 작성하기 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </article>
+
+        <!-- 검토 중: S02·S03에서 밖으로 나와 검토 결과가 남아 있는 경우 (기획서 v1.17) -->
+        <article class="card card--dashed" style="padding: 22px; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--info">검토 중</span><span class="page-meta" style="font-size: 13px">아직 매칭에 쓰이지 않아요</span></div>
+            <h3 style="font-size: 18px; font-weight: 700">[네 번째 프로젝트 제목]</h3>
+          </div>
+          <a class="btn" href="review.html">검토 이어서 하기 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </article>
+
+        <!-- 재등록 중: 확정한 프로젝트를 고치는 중. 다시 확정하기 전까지 이전 사례가 매칭에 쓰인다 (ADR-0002) -->
+        <article class="card" style="padding: 22px; gap: 14px">
+          <div class="row row--between" style="align-items: flex-start; gap: 10px">
+            <div class="stack" style="gap: 6px">
+              <div class="row"><span class="badge badge--info">재등록 중 · 이전 사례 1개 사용 중</span><span class="page-meta" style="font-size: 13px">[회사명]</span></div>
+              <h3 style="font-size: 18px; font-weight: 700">[다섯 번째 프로젝트 제목]</h3>
+            </div>
+            <a class="btn btn--sm" href="project.html">이어서 수정하기</a>
+          </div>
+          <ul class="plain stack" style="gap: 8px; font-size: 14px; line-height: 1.55">
+            <li style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; background: var(--bg); border-radius: 10px; padding: 12px 14px"><span style="font-size: 12px; font-weight: 700; color: var(--accent)">사례 1</span><span><strong style="font-weight: 600">[이전에 확정한 사례 제목]</strong><br><span class="cell-muted">[문제] → [해결] → [결과]</span></span></li>
+          </ul>
         </article>
 
         <p class="note"><svg class="i" aria-hidden="true"><use href="#i-info"></use></svg>경험을 수정하면 재구성·확인을 다시 거친 뒤 매칭에 반영돼요.</p>
@@ -109,6 +133,28 @@
     </div>
   </main>
 
+  <!-- 확정 프로젝트 "수정": 재등록 안내 (기획서 6장 S06, ADR-0002 Q6) -->
+  <div class="modal" id="reregister-modal" role="dialog" aria-modal="true" aria-labelledby="reregister-title" hidden>
+    <div class="modal__box">
+      <h2 id="reregister-title" class="card__title">이 프로젝트를 다시 등록할까요?</h2>
+      <p class="card__desc" style="line-height: 1.6">확정한 프로젝트를 고치려면 원문 입력부터 사례 나누기, 확정까지 다시 거쳐요. 다시 확정하기 전까지는 지금 확정한 사례가 공고 매칭에 계속 쓰여요.</p>
+      <div class="row row--end" style="margin-top: 6px">
+        <button class="btn" data-modal-close>취소</button>
+        <a class="btn btn--primary" href="project.html">수정 시작</a>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/common.js"></script>
+  <script>
+    (function () {
+      var $modal = document.getElementById('reregister-modal');
+      document.querySelectorAll('[data-reregister]').forEach(function (b) {
+        b.addEventListener('click', function () { $modal.hidden = false; $modal.querySelector('[data-modal-close]').focus(); });
+      });
+      $modal.querySelector('[data-modal-close]').addEventListener('click', function () { $modal.hidden = true; });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $modal.hidden = true; });
+    })();
+  </script>
 </body>
 </html>
