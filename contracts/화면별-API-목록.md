@@ -1,6 +1,6 @@
 # 화면별 API 목록 (C-02 초안)
 
-> 상태: **FE 초안** · 기준: `기획서.md` v1.14, `adr/0002-project-registration-rules.md`, `design/`
+> 상태: **FE 초안** · 기준: `기획서.md` v1.15, `adr/0002-project-registration-rules.md`, `design/`
 > 다음 단계: BE가 엔드포인트(메서드·경로)를 붙이고, "확인할 것"을 함께 정한 뒤 → `web-api.openapi.yaml`(C-03)로 옮긴다.
 
 이 문서는 화면마다 **서버와 주고받아야 하는 데이터**를 정리한 목록입니다. FE가 "화면에 무엇이 필요한가"를 적고, BE가 "어떤 API로 줄 것인가"를 채웁니다. 엔드포인트 칸이 비어 있는 것은 BE가 정할 부분입니다.
