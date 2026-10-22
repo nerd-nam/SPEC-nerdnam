@@ -36,6 +36,11 @@
     resolved: {}
   };
 
+  // 읽기 모드 (review.html#confirmed): 확정한 프로젝트를 볼 때 (기획서 v1.17 F2)
+  // 확정한 사례만, 결정·수정 요청·다시 나누기·확인 질문·버전 바꾸기 없음. "수정"은 재등록 안내 후 S04
+  var READ = location.hash === '#confirmed';
+  if (READ) state.status = { 1: 'confirmed', 2: 'excluded' };
+
   var $list = document.getElementById('episodes');
 
   function pendingUnverified(ep) {
@@ -47,6 +52,7 @@
   }
 
   function statusBadge(ep) {
+    if (READ) return '<span class="badge badge--ok">' + icon('check', 'i--sm i--bold') + '확정</span>';
     var s = state.status[ep.id];
     if (s === 'confirmed') return '<span class="badge badge--ok">' + icon('check', 'i--sm i--bold') + '확정</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">다시 검토하기</button>';
     if (s === 'excluded') return '<span class="badge badge--muted">제외 · 저장 안 함</span><button class="btn btn--ghost btn--sm" data-act="undo" data-id="' + ep.id + '">다시 검토하기</button>';
@@ -59,7 +65,7 @@
     var keys = Object.keys(ep.versions).map(Number);
     var unv = pendingUnverified(ep);
 
-    var versionTabs = keys.length > 1
+    var versionTabs = !READ && keys.length > 1
       ? '<div class="seg" role="tablist" aria-label="버전" style="padding: 3px">' + keys.map(function (k) {
           var label = k === keys[keys.length - 1] ? 'v' + k + ' · 최신' : 'v' + k;
           return '<button role="tab" aria-selected="' + (k === v) + '" data-act="ver" data-id="' + ep.id + '" data-ver="' + k + '" style="min-height: 32px; font-size: 13px">' + label + '</button>';
@@ -79,7 +85,7 @@
         }).join('') + '</tbody></table></div>'
       : '';
 
-    var questions = unv.map(function (u) {
+    var questions = READ ? '' : unv.map(function (u) {
       return '<section class="card card--warn card--sm" style="padding: 16px 18px; gap: 10px; border-radius: 12px">' +
         '<h4 class="row" style="margin: 0; font-size: 14px; font-weight: 700; color: var(--warn)">' + icon('alert') + '확인 필요</h4>' +
         '<p style="font-size: 15px; line-height: 1.6">' + esc(u.q) + '</p>' +
@@ -105,7 +111,7 @@
   }
 
   function render() {
-    $list.innerHTML = EPISODES.map(function (ep, i) {
+    $list.innerHTML = EPISODES.filter(function (e) { return !READ || state.status[e.id] === 'confirmed'; }).map(function (ep, i) {
       var isOpen = state.open === ep.id;
       var data = ep.versions[state.ver[ep.id]];
       return '<article class="ep">' +
@@ -136,6 +142,13 @@
       ? '확정한 사례 ' + confirmed + '개만 지원서 근거로 저장돼요. 제외한 사례는 저장하지 않아요.'
       : (done < total ? '사례 ' + (total - done) + '개가 남았어요. 모든 사례를 확정하거나 제외하면 프로젝트를 확정할 수 있어요.' : '확정한 사례가 하나 이상 있어야 프로젝트를 확정할 수 있어요.');
   }
+
+  // 읽기 모드: 사례 카드 아래 버튼 줄과 안내 문구를 지운다
+  var baseRender = render;
+  render = function () {
+    baseRender();
+    if (READ) document.querySelectorAll('.ep__foot, .ep__body > .page-meta').forEach(function (n) { n.remove(); });
+  };
 
   $list.addEventListener('click', function (e) {
     var b = e.target.closest('[data-act]');
@@ -170,6 +183,7 @@
   var $modal = document.getElementById('leave-modal');
   var $leaveConfirm = document.getElementById('leave-confirm');
   document.addEventListener('click', function (e) {
+    if (READ) return; // 읽기 모드는 잃을 검토 결과가 없다
     var a = e.target.closest('a[href]');
     if (!a || a.id === 'project-confirm' || a.id === 'leave-confirm') return;
     var href = a.getAttribute('href');
@@ -187,6 +201,30 @@
     legend: 'AI가 나눈 사례는 어땠나요?',
     placeholder: '예: 사례를 너무 잘게 나눴어요'
   });
+
+  if (READ) {
+    document.querySelector('nav[aria-label="온보딩 단계"]').hidden = true;
+    var $badge = document.querySelector('.page-head .badge');
+    $badge.className = 'badge badge--ok';
+    $badge.textContent = '확정';
+    // 검토용 안내·진행률은 숨기고(그리기 함수가 계속 쓰므로 지우지 않는다) 읽기 모드 안내와 "수정"을 넣는다
+    var $desc = document.querySelector('.page-head__text > p');
+    $desc.hidden = true;
+    $desc.insertAdjacentHTML('afterend', '<p style="font-size: 15px; color: var(--muted)">확정한 사례가 공고 매칭의 근거로 쓰이고 있어요. 고치려면 수정을 눌러 다시 등록해 주세요.</p>');
+    var $progress = document.getElementById('ep-done').closest('.stack');
+    $progress.hidden = true;
+    $progress.insertAdjacentHTML('afterend', '<a class="btn" href="project.html" id="reregister">수정</a>');
+    document.getElementById('reregister').addEventListener('click', function (e) {
+      if (!window.confirm('이 프로젝트를 다시 등록할까요?\n원문 입력부터 사례 나누기, 확정까지 다시 거쳐요. 다시 확정하기 전까지는 지금 확정한 사례가 공고 매칭에 계속 쓰여요.')) e.preventDefault();
+    });
+    document.querySelector('section[aria-labelledby="fb-title"]').hidden = true;
+    document.querySelector('section[aria-label="사례 목록"] > .btn--block').hidden = true;
+    // 원문 하이라이트에서 제외한 사례(2) 표시를 지운다
+    document.querySelectorAll('mark.mark-ep2').forEach(function (m) {
+      if (m.closest('p.row')) m.remove(); else m.outerHTML = m.innerHTML;
+    });
+    document.querySelectorAll('.ep-label--2').forEach(function (l) { l.remove(); });
+  }
 
   render();
 })();
