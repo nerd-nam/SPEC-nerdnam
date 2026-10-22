@@ -12,7 +12,7 @@ nerdnam(AI 맞춤형 지원서 코치) 프로젝트의 공용 문서 레포지�
 | `design/` | 화면 디자인 (HTML·CSS·JS, 빌드 없이 바로 열림) | 웹, API |
 | `contracts/` | 서버 간 API 계약 (OpenAPI) · 추가 예정 | 경계를 맞대는 두 담당 |
 | `fixtures/` | 세 레포가 함께 쓰는 예시 데이터 · 추가 예정 | 전원 |
-| `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`) | 전원 |
+| `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`) | 전원 |
 
 ## 화면 디자인 보는 법
 
