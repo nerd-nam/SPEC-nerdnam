@@ -1,0 +1,97 @@
+{
+  "_source": "기획서.md 4.4·5.5(/embed 요청 형식). 제외한 사례(e_202)는 청크를 만들지 않는다",
+  "user_id": "u_01",
+  "chunks": [
+    {
+      "chunk_id": "ch_sk_java",
+      "chunk_type": "skill",
+      "source_id": "Java",
+      "title": null,
+      "text": "Java · language · 능숙 · 사용처: OO커머스"
+    },
+    {
+      "chunk_id": "ch_sk_springboot",
+      "chunk_type": "skill",
+      "source_id": "Spring Boot",
+      "title": null,
+      "text": "Spring Boot · framework · 능숙 · 사용처: OO커머스, 결제 승인 API 성능 개선"
+    },
+    {
+      "chunk_id": "ch_sk_jpa",
+      "chunk_type": "skill",
+      "source_id": "JPA",
+      "title": null,
+      "text": "JPA · framework · 능숙 · 사용처: OO커머스, 정산 배치 쿼리 개선"
+    },
+    {
+      "chunk_id": "ch_sk_mysql",
+      "chunk_type": "skill",
+      "source_id": "MySQL",
+      "title": null,
+      "text": "MySQL · database · 능숙 · 사용처: OO커머스, 정산 배치 쿼리 개선"
+    },
+    {
+      "chunk_id": "ch_sk_redis",
+      "chunk_type": "skill",
+      "source_id": "Redis",
+      "title": null,
+      "text": "Redis · database · 실무 사용 · 사용처: OO커머스, 결제 승인 API 성능 개선"
+    },
+    {
+      "chunk_id": "ch_sk_kafka",
+      "chunk_type": "skill",
+      "source_id": "Kafka",
+      "title": null,
+      "text": "Kafka · infra · 실무 사용 · 사용처: OO커머스, 결제 승인 API 성능 개선"
+    },
+    {
+      "chunk_id": "ch_sk_aws",
+      "chunk_type": "skill",
+      "source_id": "AWS",
+      "title": null,
+      "text": "AWS · infra · 실무 사용"
+    },
+    {
+      "chunk_id": "ch_sk_springbatch",
+      "chunk_type": "skill",
+      "source_id": "Spring Batch",
+      "title": null,
+      "text": "Spring Batch · framework · 학습 중 · 사용처: 정산 배치 쿼리 개선"
+    },
+    {
+      "chunk_id": "ch_c_01",
+      "chunk_type": "career",
+      "source_id": "c_01",
+      "title": null,
+      "text": "OO커머스 · 결제플랫폼팀 백엔드 개발자 · 2023-03 ~ 재직 중 · 주요 업무: 결제 승인·취소 API 설계와 운영, 정산 배치 개발과 쿼리 성능 개선 · 기술: Java, Spring Boot, JPA, MySQL, Redis, Kafka"
+    },
+    {
+      "chunk_id": "ch_p_102",
+      "chunk_type": "project_summary",
+      "source_id": "p_102",
+      "title": "결제 승인 API 성능 개선",
+      "text": "역할: 백엔드 리드 (팀 4명) · 기술: Spring Boot, Redis, Kafka · 사례: 결제 승인 응답 지연 개선 (평균 응답 1.2초 → 0.3초)"
+    },
+    {
+      "chunk_id": "ch_p_103",
+      "chunk_type": "project_summary",
+      "source_id": "p_103",
+      "title": "정산 배치 쿼리 개선",
+      "text": "역할: [역할] · 기술: Spring Batch, MySQL, JPA · 사례: 정산 배치 쿼리 개선 (실행 계획 분석, 인덱스 재설계)"
+    },
+    {
+      "chunk_id": "ch_e_201",
+      "chunk_type": "episode",
+      "source_id": "e_201",
+      "title": "결제 승인 API 성능 개선 · 결제 승인 응답 지연 개선",
+      "text": "역할: 백엔드 리드 (팀 4명) · 문제: 프로모션 기간 결제 승인 응답이 평균 1.2초까지 느려져 이탈 발생 · 해결: 가맹점 조회를 Redis 캐시로 전환, 승인 후처리를 Kafka 비동기로 분리 · 결과: 평균 응답 1.2초 → 0.3초, 피크 TPS 약 2배 처리"
+    },
+    {
+      "chunk_id": "ch_e_203",
+      "chunk_type": "episode",
+      "source_id": "e_203",
+      "title": "정산 배치 쿼리 개선 · 정산 배치 쿼리 개선",
+      "text": "역할: [역할] · 문제: 정산 배치가 마감 시간을 넘김 · 해결: 실행 계획 분석, 인덱스 재설계 · 결과: [배치 처리 시간 변화]"
+    }
+  ]
+}

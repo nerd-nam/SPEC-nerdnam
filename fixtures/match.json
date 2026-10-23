@@ -1,0 +1,81 @@
+{
+  "_source": "기획서.md 4.5·7.1, design/report.js·report.html",
+  "jd_id": "jd_01",
+  "as_of": "2026-10-23",
+  "summary": {
+    "required": {
+      "total": 3,
+      "met": 3
+    },
+    "preferred": {
+      "total": 3,
+      "met": 1,
+      "partial": 1
+    }
+  },
+  "diagnosis": "필수 3개 모두 근거 경험이 있어요. 결제 승인 API 개선 경험이 가장 많은 요건(3개)을 뒷받침해요.",
+  "match_results": [
+    {
+      "requirement_id": "r_1",
+      "verdict": "met",
+      "evidence_chunk_ids": [
+        "ch_sk_springboot",
+        "ch_c_01"
+      ],
+      "reason": "Spring Boot를 능숙하게 다루고, Spring을 쓴 경력의 재직기간을 합산하면 3년 이상이에요."
+    },
+    {
+      "requirement_id": "r_2",
+      "verdict": "met",
+      "evidence_chunk_ids": [
+        "ch_e_203"
+      ],
+      "reason": "정산 배치에서 실행 계획 분석과 인덱스 재설계를 했어요."
+    },
+    {
+      "requirement_id": "r_3",
+      "verdict": "met",
+      "evidence_chunk_ids": [
+        "ch_e_201"
+      ],
+      "reason": "프로모션 피크 처리량 약 2배를 장애 없이 처리했어요."
+    },
+    {
+      "requirement_id": "r_4",
+      "verdict": "met",
+      "evidence_chunk_ids": [
+        "ch_e_201"
+      ],
+      "reason": "승인 후처리를 Kafka 비동기 처리로 분리했어요."
+    },
+    {
+      "requirement_id": "r_5",
+      "verdict": "partial",
+      "evidence_chunk_ids": [
+        "ch_c_01",
+        "ch_e_201"
+      ],
+      "reason": "커머스 결제 시스템 경험은 있지만 금융권 규제 관련 경험은 없어요.",
+      "gap_guide": {
+        "advice": "커머스 결제 경험은 범위를 정확히 밝혀 쓰세요. “결제 승인·정산 시스템 운영”처럼 공고의 주요 업무와 겹치는 표현이 유리해요.",
+        "avoid": "금융권 경험으로 부풀리기",
+        "cited_chunk_ids": [
+          "ch_c_01"
+        ],
+        "source": "ai"
+      }
+    },
+    {
+      "requirement_id": "r_6",
+      "verdict": "unmet",
+      "evidence_chunk_ids": [],
+      "reason": "저장된 경험에서 관련 근거를 찾지 못했어요.",
+      "gap_guide": {
+        "advice": "우대사항이라 지원에는 문제없어요. 학습 중이거나 개인 프로젝트가 있다면 포트폴리오 끝에 “학습 중”으로 따로 적으세요.",
+        "avoid": "사용해 본 것처럼 쓰기",
+        "cited_chunk_ids": [],
+        "source": "ai"
+      }
+    }
+  ]
+}

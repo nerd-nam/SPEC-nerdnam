@@ -1,0 +1,70 @@
+{
+  "_source": "기획서.md 4.1·4.2, design/skills.html·career.html",
+  "user_id": "u_01",
+  "skills": [
+    {
+      "name": "Java",
+      "category": "language",
+      "level": 3
+    },
+    {
+      "name": "Spring Boot",
+      "category": "framework",
+      "level": 3
+    },
+    {
+      "name": "JPA",
+      "category": "framework",
+      "level": 3
+    },
+    {
+      "name": "MySQL",
+      "category": "database",
+      "level": 3
+    },
+    {
+      "name": "Redis",
+      "category": "database",
+      "level": 2
+    },
+    {
+      "name": "Kafka",
+      "category": "infra",
+      "level": 2
+    },
+    {
+      "name": "AWS",
+      "category": "infra",
+      "level": 2
+    },
+    {
+      "name": "Spring Batch",
+      "category": "framework",
+      "level": 1
+    }
+  ],
+  "careers": [
+    {
+      "career_id": "c_01",
+      "company": "OO커머스",
+      "team": "결제플랫폼팀",
+      "job_title": "백엔드 개발자",
+      "position": "선임",
+      "employment_type": "full_time",
+      "start": "2023-03",
+      "end": null,
+      "duties": [
+        "결제 승인·취소 API 설계와 운영",
+        "정산 배치 개발과 쿼리 성능 개선"
+      ],
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "JPA",
+        "MySQL",
+        "Redis",
+        "Kafka"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "_source": "기획서.md 4.3, design/project.html(원문)·review.html·review.js(사례·확인 질문 답변)·library.html(p_103)",
+  "projects": [
+    {
+      "project_id": "p_102",
+      "title": "결제 승인 API 성능 개선",
+      "period": {
+        "start": "2024-05",
+        "end": "2024-09"
+      },
+      "career_id": "c_01",
+      "skills": [
+        "Spring Boot",
+        "Redis",
+        "Kafka"
+      ],
+      "status": "confirmed",
+      "generation_count": 2,
+      "split_round": 1,
+      "raw_text": "작년 프로모션 때 결제 승인 API가 느려져서 장애 직전까지 갔다. 평균 응답이 1.2초까지 늘었고 결제 이탈이 생겼다. 원인을 보니 승인할 때마다 가맹점 정보를 DB에서 조회하고, 알림이나 포인트 적립 같은 후처리를 동기로 처리하고 있었다.\n\n가맹점 조회는 Redis 캐시로 바꾸고 후처리는 Kafka로 비동기 분리했다. 팀 4명 중 백엔드 리드로 설계와 구현을 맡았다. 그 결과 평균 응답이 0.3초로 줄었다.\n\n그때까지는 프로모션 트래픽을 미리 확인할 방법이 없어서 문제를 운영 중에야 알았다. 그래서 프로모션 전에 실제 트래픽 패턴으로 부하 테스트를 돌리는 절차를 만들고, 장애 대응 매뉴얼도 정리해 팀에 공유했다. 다음 프로모션 피크는 문제없이 넘겼다.",
+      "answers": [
+        {
+          "episode_id": "e_201",
+          "question": "[사례 1 확인 질문]",
+          "answer": "피크 TPS 약 2배까지 문제없이 처리"
+        }
+      ],
+      "episodes": [
+        {
+          "episode_id": "e_201",
+          "title": "결제 승인 응답 지연 개선",
+          "status": "confirmed",
+          "version": 2,
+          "split_round": 1,
+          "role": "백엔드 리드 (팀 4명)",
+          "skills": [
+            "Spring Boot",
+            "Redis",
+            "Kafka"
+          ],
+          "problem": "프로모션 기간 결제 승인 응답이 평균 1.2초까지 느려져 이탈 발생",
+          "solution": "가맹점 조회를 Redis 캐시로 전환, 승인 후처리를 Kafka 비동기로 분리",
+          "result": "평균 응답 1.2초 → 0.3초, 피크 TPS 약 2배 처리",
+          "metrics": [
+            {
+              "name": "평균 응답시간",
+              "before": "1.2s",
+              "after": "0.3s",
+              "source": "raw_text"
+            },
+            {
+              "name": "피크 처리량(TPS)",
+              "before": null,
+              "after": "약 2배",
+              "source": "answer"
+            }
+          ],
+          "source_spans": [
+            [
+              0,
+              135
+            ],
+            [
+              137,
+              231
+            ]
+          ],
+          "unverified": []
+        },
+        {
+          "episode_id": "e_202",
+          "title": "프로모션 전 부하 테스트 절차 도입",
+          "status": "excluded",
+          "version": 1,
+          "split_round": 1,
+          "role": "절차 설계·문서화",
+          "skills": [],
+          "problem": "프로모션 트래픽을 미리 확인할 방법이 없어 문제를 운영 중에야 발견",
+          "solution": "실제 트래픽 패턴의 부하 테스트 절차와 장애 대응 매뉴얼을 만들어 팀에 공유",
+          "result": "다음 프로모션 피크를 문제없이 넘김",
+          "metrics": [],
+          "source_spans": [
+            [
+              233,
+              370
+            ]
+          ],
+          "unverified": []
+        }
+      ]
+    },
+    {
+      "project_id": "p_103",
+      "title": "정산 배치 쿼리 개선",
+      "period": null,
+      "career_id": "c_01",
+      "skills": [
+        "Spring Batch",
+        "MySQL",
+        "JPA"
+      ],
+      "status": "confirmed",
+      "generation_count": 1,
+      "split_round": 1,
+      "raw_text": null,
+      "answers": [],
+      "episodes": [
+        {
+          "episode_id": "e_203",
+          "title": "정산 배치 쿼리 개선",
+          "status": "confirmed",
+          "version": 1,
+          "split_round": 1,
+          "role": "[역할]",
+          "skills": [
+            "Spring Batch",
+            "MySQL",
+            "JPA"
+          ],
+          "problem": "정산 배치가 마감 시간을 넘김",
+          "solution": "실행 계획 분석, 인덱스 재설계",
+          "result": "[배치 처리 시간 변화]",
+          "metrics": [],
+          "source_spans": [],
+          "unverified": []
+        }
+      ]
+    }
+  ]
+}
