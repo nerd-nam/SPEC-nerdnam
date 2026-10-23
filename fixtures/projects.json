@@ -1,14 +1,14 @@
 {
-  "_source": "기획서.md 4.3, design/project.html(원문)·review.html·review.js(사례·확인 질문 답변)·library.html(p_103)",
+  "_source": "기획서.md 4.3, design/project.html(원문)·review.html·review.js(사례·확인 질문 답변)·library.html(프로젝트 103)",
   "projects": [
     {
-      "project_id": "p_102",
+      "project_id": 102,
       "title": "결제 승인 API 성능 개선",
       "period": {
         "start": "2024-05",
         "end": "2024-09"
       },
-      "career_id": "c_01",
+      "career_id": 1,
       "skills": [
         "Spring Boot",
         "Redis",
@@ -20,14 +20,14 @@
       "raw_text": "작년 프로모션 때 결제 승인 API가 느려져서 장애 직전까지 갔다. 평균 응답이 1.2초까지 늘었고 결제 이탈이 생겼다. 원인을 보니 승인할 때마다 가맹점 정보를 DB에서 조회하고, 알림이나 포인트 적립 같은 후처리를 동기로 처리하고 있었다.\n\n가맹점 조회는 Redis 캐시로 바꾸고 후처리는 Kafka로 비동기 분리했다. 팀 4명 중 백엔드 리드로 설계와 구현을 맡았다. 그 결과 평균 응답이 0.3초로 줄었다.\n\n그때까지는 프로모션 트래픽을 미리 확인할 방법이 없어서 문제를 운영 중에야 알았다. 그래서 프로모션 전에 실제 트래픽 패턴으로 부하 테스트를 돌리는 절차를 만들고, 장애 대응 매뉴얼도 정리해 팀에 공유했다. 다음 프로모션 피크는 문제없이 넘겼다.",
       "answers": [
         {
-          "episode_id": "e_201",
+          "episode_id": 201,
           "question": "[사례 1 확인 질문]",
           "answer": "피크 TPS 약 2배까지 문제없이 처리"
         }
       ],
       "episodes": [
         {
-          "episode_id": "e_201",
+          "episode_id": 201,
           "title": "결제 승인 응답 지연 개선",
           "status": "confirmed",
           "version": 2,
@@ -68,7 +68,7 @@
           "unverified": []
         },
         {
-          "episode_id": "e_202",
+          "episode_id": 202,
           "title": "프로모션 전 부하 테스트 절차 도입",
           "status": "excluded",
           "version": 1,
@@ -90,10 +90,10 @@
       ]
     },
     {
-      "project_id": "p_103",
+      "project_id": 103,
       "title": "정산 배치 쿼리 개선",
       "period": null,
-      "career_id": "c_01",
+      "career_id": 1,
       "skills": [
         "Spring Batch",
         "MySQL",
@@ -106,7 +106,7 @@
       "answers": [],
       "episodes": [
         {
-          "episode_id": "e_203",
+          "episode_id": 203,
           "title": "정산 배치 쿼리 개선",
           "status": "confirmed",
           "version": 1,
