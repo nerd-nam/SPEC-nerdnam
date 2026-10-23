@@ -183,7 +183,7 @@
 ## S05 프로젝트 재구성 검토
 
 재료: `design/review.html`, `design/assets/js/review.js`, 기획서 F2·4.3, 작업목록 FE-08·BE-08·BE-09, D-2
-주소: `/projects/[projectId]/review` (기획서 v1.11). 확정한 프로젝트는 같은 주소에서 읽기 모드, 특정 사례를 펼쳐 열려면 `#사례id` (기획서 v1.17)
+주소: `/projects/[projectId]/review` (기획서 v1.11). 확정한 프로젝트는 같은 주소에서 읽기 모드, 특정 사례를 펼쳐 열려면 `#사례id` (기획서 v1.17). 읽기 모드의 머리글은 앱 머리글("내 경험" 메뉴, 기획서 v1.21)
 
 ### 조회
 

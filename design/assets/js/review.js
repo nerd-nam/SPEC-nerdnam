@@ -203,6 +203,13 @@
   });
 
   if (READ) {
+    // 머리글: 온보딩용("저장하고 나중에 하기") 대신 S06과 같은 앱 머리글 (기획서 v1.21)
+    var $brand = document.querySelector('.header .brand');
+    $brand.insertAdjacentHTML('beforebegin', '<div class="header__left"></div>');
+    var $left = document.querySelector('.header__left');
+    $left.appendChild($brand);
+    $left.insertAdjacentHTML('beforeend', '<nav class="nav" aria-label="주 메뉴"><a href="library.html" aria-current="page">내 경험</a><a href="jd.html">지원 준비</a></nav>');
+    document.querySelector('.header .header-link').outerHTML = '<button class="avatar" aria-label="계정 메뉴">김</button>';
     document.querySelector('nav[aria-label="온보딩 단계"]').hidden = true;
     var $badge = document.querySelector('.page-head .badge');
     $badge.className = 'badge badge--ok';
