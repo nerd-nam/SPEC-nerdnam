@@ -10,7 +10,7 @@ nerdnam(AI 맞춤형 지원서 코치) 프로젝트의 공용 문서 레포지�
 | `기획서.md` | 서비스 정의, 기능 명세, 데이터 설계, 아키텍처, 로드맵 | 전원 |
 | `작업목록.md` | 프론트엔드·백엔드·AI 담당별 작업 목록, 진행 순서, 먼저 정할 것 | 전원 |
 | `design/` | 화면 디자인 (HTML·CSS·JS, 빌드 없이 바로 열림) | 웹, API |
-| `contracts/` | 서버 간 API 계약 (OpenAPI). `api-ai.openapi.yaml`은 AI 레포 `app/schemas.py`에서 내보냄 (`scripts/export_contract.py`) | 경계를 맞대는 두 담당 |
+| `contracts/` | 서버 간 API 계약 (OpenAPI). `api-ai.openapi.yaml`은 AI 레포 `app/schemas.py`에서 내보냄 (`scripts/export_contract.py`). `web-api.openapi.yaml`은 BE 레포의 실제 컨트롤러에서 내보냄 (`./gradlew exportWebApiContract`) | 경계를 맞대는 두 담당 |
 | `fixtures/` | 세 레포가 함께 쓰는 예시 데이터 (`fixtures/README.md`) | 전원 |
 | `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`, `0004-remove-project-image.md`) | 전원 |
 
@@ -46,5 +46,13 @@ design/
 
 - **결정은 문서에 남긴다.** 바뀐 결정은 `기획서.md`에 반영하고, 중요한 결정은 `adr/`에 짧게 기록합니다.
 - **계약 변경은 이 레포의 PR로만 한다.** `contracts/` 변경은 세 담당 모두 리뷰합니다. 합의된 계약에는 `contracts-vX.Y.Z` 태그를 달고, 각 서버 레포는 따르는 태그를 README에 적습니다.
+- **계약 파일은 손으로 고치지 않습니다.** 두 파일 모두 구현에서 내보낸 결과물입니다.
+
+| 계약 | 출처 | 갱신 방법 |
+| --- | --- | --- |
+| `api-ai.openapi.yaml` | AI 레포 `app/schemas.py` | AI 레포에서 `scripts/export_contract.py` → 이 레포에 PR |
+| `web-api.openapi.yaml` | BE 레포의 컨트롤러·DTO (springdoc) | BE 레포에서 `./gradlew exportWebApiContract` → 이 레포에 PR |
+
+  고쳐야 할 것이 있으면 **구현을 고친 뒤 다시 내보냅니다.** 각 서버 레포에는 계약과 구현을 대조하는 테스트가 있어(BE `ApiAiContractTest`·`WebApiContractTest`) 둘이 어긋나면 CI 가 잡습니다.
 - **기획서 버전 번호는 겹치지 않게 한다.** PR을 올리기 전에 열린 PR이 쓰는 기획서 버전을 확인하고 그다음 번호를 씁니다. 그래도 겹치면 나중에 머지되는 PR이 번호를 올리고, 변경 이력은 두 줄을 모두 남깁니다.
 - **예시 데이터는 하나로 맞춘다.** 웹 목업, API 통합 테스트, AI 평가 세트가 `fixtures/`의 같은 데이터를 씁니다.
