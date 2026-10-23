@@ -34,16 +34,16 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 로그인 후 화면이 열릴 때 | 내 정보: 사용자 id, 이름(머리글 동그라미에 첫 글자 표시), 이메일 | |
-| 로그인 후 화면이 열릴 때 | 온보딩 진행 상태: 어느 단계까지 했는지 (기술스택·경력·프로젝트 입력 여부, 확정 프로젝트 수), **검토 중인 프로젝트 id**(있으면 S02·S03에 "검토로 돌아가기", S04 들어갈 때 경고). 로그인 직후 어느 화면으로 보낼지 정하는 데도 씀 | |
-| AI 작업을 요청한 뒤 몇 초마다 (폴링) | AI 작업 상태: 작업 id → 상태(진행 중·완료·실패), 실패 이유(GPU 서버 꺼짐 / 그 밖의 오류), 완료되면 결과를 다시 조회할 대상 id | |
+| 로그인 후 화면이 열릴 때 | 내 정보: 사용자 id, 이름(머리글 동그라미에 첫 글자 표시), 이메일 |`GET /api/me` |
+| 로그인 후 화면이 열릴 때 | 온보딩 진행 상태: 어느 단계까지 했는지 (기술스택·경력·프로젝트 입력 여부, 확정 프로젝트 수), **검토 중인 프로젝트 id**(있으면 S02·S03에 "검토로 돌아가기", S04 들어갈 때 경고). 로그인 직후 어느 화면으로 보낼지 정하는 데도 씀 |`GET /api/me/onboarding` |
+| AI 작업을 요청한 뒤 몇 초마다 (폴링) | AI 작업 상태: 작업 id → 상태(진행 중·완료·실패), 실패 이유(GPU 서버 꺼짐 / 그 밖의 오류), 완료되면 결과를 다시 조회할 대상 id |`GET /api/ai-jobs/{jobId}` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 머리글 계정 메뉴 → 로그아웃 | - | |
-| 머리글 계정 메뉴 → 탈퇴 | - (탈퇴 시 원본·벡터 즉시 삭제, 기획서 8장) | |
+| 머리글 계정 메뉴 → 로그아웃 | - |`POST /api/auth/logout` |
+| 머리글 계정 메뉴 → 탈퇴 | - (탈퇴 시 원본·벡터 즉시 삭제, 기획서 8장) |`DELETE /api/me` |
 
 ### 확인할 것
 
@@ -65,15 +65,15 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 이미 로그인한 사용자인지 (공통의 "내 정보"를 재사용). 로그인 상태면 다음 화면으로 보냄 | |
+| 화면이 열릴 때 | 이미 로그인한 사용자인지 (공통의 "내 정보"를 재사용). 로그인 상태면 다음 화면으로 보냄 |`GET /api/me` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| "Google 계정으로 계속" | 소셜 로그인 시작 → 로그인 후 돌아올 주소 | |
-| "카카오 계정으로 계속" | 소셜 로그인 시작 → 로그인 후 돌아올 주소 | |
-| 로그인(가입) 완료 시 | 개인정보 동의 기록: 동의 여부, 동의한 약관 버전, 동의 시각 (BE-03 "동의 기록") | |
+| "Google 계정으로 계속" | 소셜 로그인 시작 → 로그인 후 돌아올 주소 |`GET /oauth2/authorization/google` |
+| "카카오 계정으로 계속" | 소셜 로그인 시작 → 로그인 후 돌아올 주소 |`GET /oauth2/authorization/kakao` |
+| 로그인(가입) 완료 시 | 개인정보 동의 기록: 동의 여부, 동의한 약관 버전, 동의 시각 (BE-03 "동의 기록") |`POST /api/me/consents` |
 
 ### 확인할 것
 
@@ -93,17 +93,17 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 내가 추가한 기술 목록: 기술 id, `name`(표준 이름), `category`, `level`(1~4) | |
-| 화면이 열릴 때, 카테고리 탭을 바꿀 때 | 카테고리별 "자주 쓰는 기술" 추천 목록: `name` 여러 개 | |
-| 검색창에 입력할 때마다 | 기술명 자동완성 후보 (표준 사전): `name`, `category`. 예: "k8s" → Kubernetes | |
+| 화면이 열릴 때 | 내가 추가한 기술 목록: 기술 id, `name`(표준 이름), `category`, `level`(1~4) |`GET /api/me/skills` |
+| 화면이 열릴 때, 카테고리 탭을 바꿀 때 | 카테고리별 "자주 쓰는 기술" 추천 목록: `name` 여러 개 |`GET /api/skills?category={category}` |
+| 검색창에 입력할 때마다 | 기술명 자동완성 후보 (표준 사전): `name`, `category`. 예: "k8s" → Kubernetes |`GET /api/skills?query={query}&category={category}` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 추천 칩·검색 결과로 기술 추가 | `name`(표준 이름), `category`, `level`(처음엔 1 · 학습 중) | |
-| 숙련도 막대를 누를 때 | 기술 id, 바꾼 `level` | |
-| 삭제(✕)를 누를 때 | 기술 id. 경력·프로젝트에서 쓰는 기술이면 삭제를 거부하고 **어디서 쓰는지**(예: "OO커머스 경력에서 사용 중")를 돌려준다 (ADR-0002 Q7) | |
+| 추천 칩·검색 결과로 기술 추가 | `name`(표준 이름), `category`, `level`(처음엔 1 · 학습 중) |`POST /api/me/skills` |
+| 숙련도 막대를 누를 때 | 기술 id, 바꾼 `level` |`PATCH /api/me/skills/{userSkillId}` |
+| 삭제(✕)를 누를 때 | 기술 id. 경력·프로젝트에서 쓰는 기술이면 삭제를 거부하고 **어디서 쓰는지**(예: "OO커머스 경력에서 사용 중")를 돌려준다 (ADR-0002 Q7) |`DELETE /api/me/skills/{userSkillId}` |
 
 ### 확인할 것
 
@@ -123,16 +123,16 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 내 경력 목록 (최신순): 경력 id, `company`, `team`, `job_title`, `position`, `employment_type`, `start`, `end`(재직 중이면 없음), `duties[]`(최대 5줄), `skills[]`(기술 id) | |
-| 화면이 열릴 때 | "이 회사에서 쓴 기술" 선택지 = 내 기술스택 목록 (S02의 조회를 재사용) | |
+| 화면이 열릴 때 | 내 경력 목록 (최신순): 경력 id, `company`, `team`, `job_title`, `position`, `employment_type`, `start`, `end`(재직 중이면 없음), `duties[]`(최대 5줄), `skills[]`(기술 id) |`GET /api/me/careers` |
+| 화면이 열릴 때 | "이 회사에서 쓴 기술" 선택지 = 내 기술스택 목록 (S02의 조회를 재사용) |`GET /api/me/skills` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| "경력 추가" 후 "저장" | 위 경력 필드 전체 (새 경력) | |
-| 기존 경력 수정 후 "저장" | 경력 id + 위 경력 필드 전체 | |
-| "삭제" | 경력 id. 프로젝트가 연결된 경력이면 삭제를 거부하고 **연결된 프로젝트 목록**을 돌려준다. 웹은 "프로젝트 소속을 개인으로 바꿔 주세요"라고 안내한다 (ADR-0002 Q8) | |
+| "경력 추가" 후 "저장" | 위 경력 필드 전체 (새 경력) |`POST /api/me/careers` |
+| 기존 경력 수정 후 "저장" | 경력 id + 위 경력 필드 전체 |`PUT /api/me/careers/{careerId}` |
+| "삭제" | 경력 id. 프로젝트가 연결된 경력이면 삭제를 거부하고 **연결된 프로젝트 목록**을 돌려준다. 웹은 "프로젝트 소속을 개인으로 바꿔 주세요"라고 안내한다 (ADR-0002 Q8) |`DELETE /api/me/careers/{careerId}` |
 
 ### 확인할 것
 
@@ -154,21 +154,21 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 내 프로젝트 목록 (위쪽 탭): 프로젝트 id, `title`, `status`(초안·검토 중·확정 → 탭의 "작성 중"/"확정" 배지) | |
-| 탭을 고를 때 | 프로젝트 상세: `title`, `period`(start·end), `career_id` 또는 개인·팀 프로젝트 구분, `skills[]`, `raw_text`(본문), GitHub 링크, 배포·문서 링크. 재등록 중이면 이전 확인 질문 답변도 채워져 온다 (ADR-0002 재등록 1) | |
-| 화면이 열릴 때 | "소속" 선택지 = 내 경력 목록 (S03의 조회를 재사용). 개인·팀 프로젝트는 고정 선택지 | |
-| 화면이 열릴 때 | "사용 기술" 선택지 = 내 기술스택 목록 (S02의 조회를 재사용) | |
+| 화면이 열릴 때 | 내 프로젝트 목록 (위쪽 탭): 프로젝트 id, `title`, `status`(초안·검토 중·확정 → 탭의 "작성 중"/"확정" 배지) |`GET /api/projects` |
+| 탭을 고를 때 | 프로젝트 상세: `title`, `period`(start·end), `career_id` 또는 개인·팀 프로젝트 구분, `skills[]`, `raw_text`(본문), GitHub 링크, 배포·문서 링크. 재등록 중이면 이전 확인 질문 답변도 채워져 온다 (ADR-0002 재등록 1) |`GET /api/projects/{projectId}` |
+| 화면이 열릴 때 | "소속" 선택지 = 내 경력 목록 (S03의 조회를 재사용). 개인·팀 프로젝트는 고정 선택지 |`GET /api/me/careers` |
+| 화면이 열릴 때 | "사용 기술" 선택지 = 내 기술스택 목록 (S02의 조회를 재사용) |`GET /api/me/skills` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 탭의 "추가" | 새 프로젝트 만들기 (빈 초안) | |
-| 화면에 들어올 때 (검토 중인 결과가 있으면, 경고 후) | 프로젝트 id → 확정 전 검토 결과 버리기 (기획서 v1.14 검토 결과 유지 규칙) | |
-| 단계를 옮길 때 (자동 저장) | 프로젝트 id + 위 상세 필드 | |
-| "기술스택에 없는 기술 추가" | 기술 이름 → 기술스택에 "학습 중"으로 생성 + 이 프로젝트에 연결 (BE-06) | |
-| "프로젝트 삭제" (확인창 후) | 프로젝트 id → 프로젝트·사례·청크 삭제. 어떤 상태든 가능 (기획서 v1.30) | |
-| "[문제]-[해결]-[결과]로 재구성하기" | 프로젝트 id → 재구성 시작 (AI `/restructure`, 15초 목표, 작업 상태 조회로 완료 확인) → S05로 이동 | |
+| 탭의 "추가" | 새 프로젝트 만들기 (빈 초안) |`POST /api/projects` |
+| 화면에 들어올 때 (검토 중인 결과가 있으면, 경고 후) | 프로젝트 id → 확정 전 검토 결과 버리기 (기획서 v1.14 검토 결과 유지 규칙) |`POST /api/projects/{projectId}/review/discard` |
+| 단계를 옮길 때 (자동 저장) | 프로젝트 id + 위 상세 필드 |`PUT /api/projects/{projectId}` |
+| "기술스택에 없는 기술 추가" | 기술 이름 → 기술스택에 "학습 중"으로 생성 + 이 프로젝트에 연결 (BE-06) |`POST /api/projects/{projectId}/skills` |
+| "프로젝트 삭제" (확인창 후) | 프로젝트 id → 프로젝트·사례·청크 삭제. 어떤 상태든 가능 (기획서 v1.30) |`DELETE /api/projects/{projectId}` |
+| "[문제]-[해결]-[결과]로 재구성하기" | 프로젝트 id → 재구성 시작 (AI `/restructure`, 15초 목표, 작업 상태 조회로 완료 확인) → S05로 이동 |`POST /api/projects/{projectId}/split` |
 
 ### 확인할 것
 
@@ -192,28 +192,28 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 프로젝트 요약: 프로젝트 id, `title`, `status`(확정이면 읽기 모드), 소속 회사명, `period`, 재등록 중인지, AI 작업 진행 중인지 (공통 3번) | |
-| 화면이 열릴 때 | 원문: `raw_text` + 확인 질문에 답해 덧붙인 내용 ("사례 1 확인 질문에 답한 내용") | |
-| 화면이 열릴 때 | 사례 목록 `episodes[]`: `episode_id`, `title`, `status`(`superseded`는 화면에 보이지 않으므로 빼고), 현재 `version`, `role`, `skills[]`, `problem`, `solution`, `result`, `metrics[]`(name·before·after·source), `source_spans`(원문 하이라이트), `unverified[]`(확인 질문 문구, 입력 예시) | |
-| 버전 탭(v1/v2)을 고를 때 | 그 사례의 이전 버전 내용 (위 사례 필드와 같음). 처음에 모든 버전을 같이 받을지, 고를 때 받을지 | |
-| 화면이 열릴 때 | 내가 남긴 사례 생성 평가 (있으면 `score`·`comment`, 기획서 4.6) | |
+| 화면이 열릴 때 | 프로젝트 요약: 프로젝트 id, `title`, `status`(확정이면 읽기 모드), 소속 회사명, `period`, 재등록 중인지, AI 작업 진행 중인지 (공통 3번) |`GET /api/projects/{projectId}/review` |
+| 화면이 열릴 때 | 원문: `raw_text` + 확인 질문에 답해 덧붙인 내용 ("사례 1 확인 질문에 답한 내용") |`GET /api/projects/{projectId}/review` |
+| 화면이 열릴 때 | 사례 목록 `episodes[]`: `episode_id`, `title`, `status`(`superseded`는 화면에 보이지 않으므로 빼고), 현재 `version`, `role`, `skills[]`, `problem`, `solution`, `result`, `metrics[]`(name·before·after·source), `source_spans`(원문 하이라이트), `unverified[]`(확인 질문 문구, 입력 예시) |`GET /api/projects/{projectId}/review` |
+| 버전 탭(v1/v2)을 고를 때 | 그 사례의 이전 버전 내용 (위 사례 필드와 같음). 처음에 모든 버전을 같이 받을지, 고를 때 받을지 |`GET /api/projects/{projectId}/review — episodes[].versions에 함께 포함` |
+| 화면이 열릴 때 | 내가 남긴 사례 생성 평가 (있으면 `score`·`comment`, 기획서 4.6) |`GET /api/projects/{projectId}/rating` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 확인 필요 → "답변 추가" | `episode_id`, 질문 id, 답변 글 → 원문에 덧붙여 AI로 다음 버전 생성 (F2, 횟수 제한 없음) | |
-| 확인 필요 → "빼고 진행" | `episode_id`, 질문 id → 그 내용을 뺀 새 버전 (AI 호출 없음, ADR-0002 Q10) | |
-| "이 사례 확정" | `episode_id` → `confirmed` (확인 필요가 남아 있으면 거부, BE-09) | |
-| "이 사례 제외" | `episode_id` → `excluded` | |
-| "다시 검토하기" (결정 취소) | `episode_id` → `review` (프로젝트 확정 전까지, ADR-0002 Q6) | |
-| 이전 버전을 볼 때 "이 버전으로 바꾸기" (되돌리기, F2) | `episode_id`, 고른 버전 번호. 사례 상태는 그대로 | |
-| "이 사례 수정 요청" | `episode_id`, 피드백 글 → AI로 새 버전 (횟수 제한 없음) | |
-| "직접 편집" | `episode_id`, 고친 `title`·`problem`·`solution`·`result`(·`metrics`) | |
-| "AI가 놓친 사례 직접 추가" | 새 사례 내용 (`title`, `problem`, `solution`, `result` …) | |
-| "다시 나누기" | 프로젝트 id, 피드백 글(필수) → 피드백을 반영해 AI로 사례 구성 새로 만들기 (모든 결정 초기화, 이전 사례는 `superseded`, D-2·ADR-0002, 기획서 v1.12) | |
-| 사례 생성 평가 "보내기" | 프로젝트 id, `score`(1~5), `comment`(선택). 다시 보내면 덮어씀 (기획서 4.6) | |
-| "프로젝트 확정" | 프로젝트 id → 확정 + RAG 저장 (BE-10, 재등록이면 프로젝트 청크 일괄 교체) → S06으로 | |
+| 확인 필요 → "답변 추가" | `episode_id`, 질문 id, 답변 글 → 원문에 덧붙여 AI로 다음 버전 생성 (F2, 횟수 제한 없음) |`POST /api/projects/{projectId}/episodes/{episodeId}/clarifications/{key}/answer` |
+| 확인 필요 → "빼고 진행" | `episode_id`, 질문 id → 그 내용을 뺀 새 버전 (AI 호출 없음, ADR-0002 Q10) |`POST /api/projects/{projectId}/episodes/{episodeId}/clarifications/{key}/drop` |
+| "이 사례 확정" | `episode_id` → `confirmed` (확인 필요가 남아 있으면 거부, BE-09) |`POST /api/projects/{projectId}/episodes/{episodeId}/confirm` |
+| "이 사례 제외" | `episode_id` → `excluded` |`POST /api/projects/{projectId}/episodes/{episodeId}/exclude` |
+| "다시 검토하기" (결정 취소) | `episode_id` → `review` (프로젝트 확정 전까지, ADR-0002 Q6) |`POST /api/projects/{projectId}/episodes/{episodeId}/undo` |
+| 이전 버전을 볼 때 "이 버전으로 바꾸기" (되돌리기, F2) | `episode_id`, 고른 버전 번호. 사례 상태는 그대로 |`POST /api/projects/{projectId}/episodes/{episodeId}/restore` |
+| "이 사례 수정 요청" | `episode_id`, 피드백 글 → AI로 새 버전 (횟수 제한 없음) |`POST /api/projects/{projectId}/episodes/{episodeId}/revision` |
+| "직접 편집" | `episode_id`, 고친 `title`·`problem`·`solution`·`result`(·`metrics`) |`PUT /api/projects/{projectId}/episodes/{episodeId}` |
+| "AI가 놓친 사례 직접 추가" | 새 사례 내용 (`title`, `problem`, `solution`, `result` …) |`POST /api/projects/{projectId}/episodes` |
+| "다시 나누기" | 프로젝트 id, 피드백 글(필수) → 피드백을 반영해 AI로 사례 구성 새로 만들기 (모든 결정 초기화, 이전 사례는 `superseded`, D-2·ADR-0002, 기획서 v1.12) |`POST /api/projects/{projectId}/resplit` |
+| 사례 생성 평가 "보내기" | 프로젝트 id, `score`(1~5), `comment`(선택). 다시 보내면 덮어씀 (기획서 4.6) |`PUT /api/projects/{projectId}/rating` |
+| "프로젝트 확정" | 프로젝트 id → 확정 + RAG 저장 (BE-10, 재등록이면 프로젝트 청크 일괄 교체) → S06으로 |`POST /api/projects/{projectId}/confirm` |
 
 ### 확인할 것
 
@@ -237,16 +237,16 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 통계: 기술 수, 경력 수, 확정 프로젝트 수 / 전체 프로젝트 수, 확정한 사례 수 | |
-| 화면이 열릴 때 | 프로젝트 목록: 프로젝트 id, `title`, `status`(초안·검토 중·확정·**재등록 중**), 소속 회사명, `period`, `skills[]`, 확정 사례 수, 확정한 사례들(`title`, 한 줄 요약 "문제 → 해결 → 결과"). 재등록 중이면 이전 확정 사례를 보여 준다 (검색에 계속 쓰이므로, ADR-0002 재등록 3) | |
-| 화면이 열릴 때 | 경력 요약 (회사명, 부서·직무, 기간) — S03 조회 재사용 가능 | |
-| 화면이 열릴 때 | 기술스택 요약 (`name`, `level`) — S02 조회 재사용 가능 | |
+| 화면이 열릴 때 | 통계: 기술 수, 경력 수, 확정 프로젝트 수 / 전체 프로젝트 수, 확정한 사례 수 |`GET /api/me/library` |
+| 화면이 열릴 때 | 프로젝트 목록: 프로젝트 id, `title`, `status`(초안·검토 중·확정·**재등록 중**), 소속 회사명, `period`, `skills[]`, 확정 사례 수, 확정한 사례들(`title`, 한 줄 요약 "문제 → 해결 → 결과"). 재등록 중이면 이전 확정 사례를 보여 준다 (검색에 계속 쓰이므로, ADR-0002 재등록 3) |`GET /api/me/library` |
+| 화면이 열릴 때 | 경력 요약 (회사명, 부서·직무, 기간) — S03 조회 재사용 가능 |`GET /api/me/library` |
+| 화면이 열릴 때 | 기술스택 요약 (`name`, `level`) — S02 조회 재사용 가능 |`GET /api/me/library` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 확정한 프로젝트의 "수정" | 프로젝트 id → **재등록 시작** (프로젝트가 `초안`으로, ADR-0002 재등록 1) → S04로 | |
+| 확정한 프로젝트의 "수정" | 프로젝트 id → **재등록 시작** (프로젝트가 `초안`으로, ADR-0002 재등록 1) → S04로 |`POST /api/projects/{projectId}/reopen` |
 
 그 밖의 "편집", "보기"는 다른 화면(S02~S05)으로 이동만 한다.
 
@@ -269,14 +269,14 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 저장된 공고를 열 때 (`/apply/[jdId]/jd`) | 공고 양식: `company`, `position`, 공고 링크, 필수사항 줄 목록, 우대사항 줄 목록, 주요 업무 줄 목록, 회사 소개·인재상 | |
+| 저장된 공고를 열 때 (`/apply/[jdId]/jd`) | 공고 양식: `company`, `position`, 공고 링크, 필수사항 줄 목록, 우대사항 줄 목록, 주요 업무 줄 목록, 회사 소개·인재상 |`GET /api/job-postings/{postingId}` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 입력하는 동안 (자동 임시 저장) | 위 양식 전체 (새 공고는 첫 저장 때 `jd_id` 발급) | |
-| "적합도 분석하기" | `jd_id` (또는 양식 전체) → 서버 검증 → 분석 시작 (요건 추출 → 검색 → 판정, 20초 목표) → S08로 | |
+| 입력하는 동안 (자동 임시 저장) | 위 양식 전체 (새 공고는 첫 저장 때 `jd_id` 발급) |`POST /api/job-postings, PUT /api/job-postings/{postingId}` |
+| "적합도 분석하기" | `jd_id` (또는 양식 전체) → 서버 검증 → 분석 시작 (요건 추출 → 검색 → 판정, 20초 목표) → S08로 |`POST /api/job-postings/{postingId}/analyses` |
 
 ### 확인할 것
 
@@ -298,18 +298,18 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 공고 기본: `company`, `position`, 분석 날짜 | |
-| 화면이 열릴 때 | 분석 상태: 분석 중 / 완료 / 실패 | |
-| 화면이 열릴 때 | 충족률: 필수 충족 수 / 필수 수, 우대 충족 수 / 우대 수, 우대 부분 충족 수 | |
-| 화면이 열릴 때 | 한 줄 진단 문장 (API가 판정 결과로 규칙 생성, ADR-0003) | |
-| 화면이 열릴 때 | 요건별 판정 `match_results[]`: 요건 id, `type`(필수·우대), `text`, `verdict`(D-10), `reason`, 근거 목록 (근거 종류 기술·경력·프로젝트·사례, 표시 이름, 원본으로 갈 id) | |
-| 화면이 열릴 때 | 갭 대응 가이드: 미충족·부분 충족 요건마다 가이드 문장, "하지 말 것" 문장, AI가 만들었는지 기본 문구인지 (ADR-0003) | |
+| 화면이 열릴 때 | 공고 기본: `company`, `position`, 분석 날짜 |`GET /api/job-postings/{postingId}/report` |
+| 화면이 열릴 때 | 분석 상태: 분석 중 / 완료 / 실패 |`GET /api/job-postings/{postingId}/report` |
+| 화면이 열릴 때 | 충족률: 필수 충족 수 / 필수 수, 우대 충족 수 / 우대 수, 우대 부분 충족 수 |`GET /api/job-postings/{postingId}/report` |
+| 화면이 열릴 때 | 한 줄 진단 문장 (API가 판정 결과로 규칙 생성, ADR-0003) |`GET /api/job-postings/{postingId}/report` |
+| 화면이 열릴 때 | 요건별 판정 `match_results[]`: 요건 id, `type`(필수·우대), `text`, `verdict`(D-10), `reason`, 근거 목록 (근거 종류 기술·경력·프로젝트·사례, 표시 이름, 원본으로 갈 id) |`GET /api/job-postings/{postingId}/report` |
+| 화면이 열릴 때 | 갭 대응 가이드: 미충족·부분 충족 요건마다 가이드 문장, "하지 말 것" 문장, AI가 만들었는지 기본 문구인지 (ADR-0003) |`GET /api/job-postings/{postingId}/report` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 분석 실패 시 "다시 시도" | `jd_id` → 분석 다시 시작 | |
+| 분석 실패 시 "다시 시도" | `jd_id` → 분석 다시 시작 |`POST /api/job-postings/{postingId}/analyses` |
 
 ### 확인할 것
 
@@ -331,12 +331,12 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 공고 기본: `company`, `position` | |
-| 탭을 열 때 (탭별 생성 상태 조회, 공통 3번) | 공통: 핵심 메시지, 문단 구성(제목·설명·근거 출처 목록), 강조 키워드, 피해야 할 표현 | |
-| 자기소개 탭 | 위 공통 + 요건 커버리지: 요건 문구, 필수·우대, 다뤘는지, 어느 문단에서 | |
-| 포트폴리오 탭 | 위 공통 + 페이지 흐름 `pages[]`: 순서(`order`), 쪽 제목, 내용 힌트, 제작 도구, `kind`(cover·text·diagram·chart), `episode_id`. 시각자료 미리보기(`visual`)는 없음 (D-1 결정: 안내만) | |
-| 경력기술서 탭 | 위 공통 + 바꿔 쓰기 표: 기존 표현, 공고 용어로 바꾼 표현, 대응 요건 / 미리보기 | |
-| 이미지 프롬프트 탭 | 프롬프트 목록: 제목, 용도(포트폴리오 몇 쪽), 비율, 영문 프롬프트, 제외 요소(negative) / 도구로 만들 시각자료 목록: 이름, 위치, 도구 | |
+| 화면이 열릴 때 | 공고 기본: `company`, `position` |`GET /api/job-postings/{postingId}/guides` |
+| 탭을 열 때 (탭별 생성 상태 조회, 공통 3번) | 공통: 핵심 메시지, 문단 구성(제목·설명·근거 출처 목록), 강조 키워드, 피해야 할 표현 |`GET /api/job-postings/{postingId}/guides, GET /api/job-postings/{postingId}/guides/{tab}` |
+| 자기소개 탭 | 위 공통 + 요건 커버리지: 요건 문구, 필수·우대, 다뤘는지, 어느 문단에서 |`GET /api/job-postings/{postingId}/guides/intro` |
+| 포트폴리오 탭 | 위 공통 + 페이지 흐름 `pages[]`: 순서(`order`), 쪽 제목, 내용 힌트, 제작 도구, `kind`(cover·text·diagram·chart), `episode_id`. 시각자료 미리보기(`visual`)는 없음 (D-1 결정: 안내만) |`GET /api/job-postings/{postingId}/guides/portfolio` |
+| 경력기술서 탭 | 위 공통 + 바꿔 쓰기 표: 기존 표현, 공고 용어로 바꾼 표현, 대응 요건 / 미리보기 |`GET /api/job-postings/{postingId}/guides/career` |
+| 이미지 프롬프트 탭 | 프롬프트 목록: 제목, 용도(포트폴리오 몇 쪽), 비율, 영문 프롬프트, 제외 요소(negative) / 도구로 만들 시각자료 목록: 이름, 위치, 도구 |`GET /api/job-postings/{postingId}/guides/image` |
 
 **AI 응답 이름 (api-ai 계약 v0.2 `GuideResponse.content`, 예시 `fixtures/guide.json`):** API가 웹에 줄 때 이름을 바꿀지는 C-03에서 정한다.
 
@@ -347,16 +347,16 @@
 | portfolio | + `pages[]`(4~8쪽): `order`, `title`, `hint`, `kind`, `sources` | 제작 도구 이름은 `kind`로 웹이. `sources`(사례 청크) → `episode_id`는 API가 (BE-14) |
 | career | + `rewrites[]`: `before`, `after`, `requirement_id` | 미리보기는 웹이 이 표로 만든다 (확인할 것 3) |
 | image | `prompts[]`: `title`, `purpose`, `page`, `ratio`, `prompt`, `negative` / `tool_visuals[]`: `name`, `page`, `kind`(diagram·chart) | 위치 "포트폴리오 n쪽"·도구 이름은 `page`·`kind`로 웹이 |
-| 화면이 열릴 때 | "이 방향에 쓰인 근거": 근거 이름, 원본으로 갈 id, 관련 요건 수 | |
-| 화면이 열릴 때 | 내가 남긴 방향 제시 평가 (있으면 `score`·`comment`, 기획서 4.6) | |
+| 화면이 열릴 때 | "이 방향에 쓰인 근거": 근거 이름, 원본으로 갈 id, 관련 요건 수 |`GET /api/job-postings/{postingId}/guides/{tab} — citations` |
+| 화면이 열릴 때 | 내가 남긴 방향 제시 평가 (있으면 `score`·`comment`, 기획서 4.6) |`GET /api/job-postings/{postingId}/guides/rating` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| "이 탭 다시 만들기" | `jd_id`, 탭 이름, 피드백 글 → 그 탭만 새로 생성 (작업 상태 조회로 완료 확인) | |
-| 방향 제시 평가 "보내기" | `jd_id`, `score`(1~5), `comment`(선택). 다시 보내면 덮어씀 (기획서 4.6) | |
-| "PDF로 내보내기" | API 없음. 브라우저 인쇄로 한다 (D-6 결정) | |
+| "이 탭 다시 만들기" | `jd_id`, 탭 이름, 피드백 글 → 그 탭만 새로 생성 (작업 상태 조회로 완료 확인) |`POST /api/job-postings/{postingId}/guides/{tab}` |
+| 방향 제시 평가 "보내기" | `jd_id`, `score`(1~5), `comment`(선택). 다시 보내면 덮어씀 (기획서 4.6) |`PUT /api/job-postings/{postingId}/guides/rating` |
+| "PDF로 내보내기" | API 없음. 브라우저 인쇄로 한다 (D-6 결정) |`없음 (브라우저 인쇄)` |
 
 복사 버튼은 웹에서만 처리한다.
 
@@ -379,14 +379,14 @@
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| 화면이 열릴 때 | 내 공고 목록 (**최근에 고친 것부터**): `jd_id`, `company`, `position`, 상태(작성 중·분석 중·분석 완료·분석 실패), 날짜(분석했으면 분석일, 아니면 마지막 수정일), (분석 완료면) 필수 충족 수/필수 수, 우대 충족 수/우대 수, 우대 부분 충족 수 | |
+| 화면이 열릴 때 | 내 공고 목록 (**최근에 고친 것부터**): `jd_id`, `company`, `position`, 상태(작성 중·분석 중·분석 완료·분석 실패), 날짜(분석했으면 분석일, 아니면 마지막 수정일), (분석 완료면) 필수 충족 수/필수 수, 우대 충족 수/우대 수, 우대 부분 충족 수 |`GET /api/job-postings` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| "새 공고" | 없음. `/apply/new/jd`로 이동 | |
-| 카드의 "삭제" (확인창 후) | `jd_id` → 공고, 분석 기록(리포트), 작성 방향 삭제. 내 경험은 그대로 | |
+| "새 공고" | 없음. `/apply/new/jd`로 이동 |`없음 (웹에서 이동)` |
+| 카드의 "삭제" (확인창 후) | `jd_id` → 공고, 분석 기록(리포트), 작성 방향 삭제. 내 경험은 그대로 |`DELETE /api/job-postings/{postingId}` |
 
 카드의 이동(웹): 작성 중 → "이어서 작성하기"(S07) / 분석 중 → "진행 상황 보기"(S08) / 분석 실패 → "다시 시도하기"(S08 실패 상자) / 분석 완료 → "리포트"(S08)·"작성 방향"(S09 지원동기 탭)
 
@@ -397,13 +397,13 @@
 3. ~~**공고 삭제**~~ → **결정 (2026-10-23, 기획서 v1.31):** 카드마다 "삭제" → 확인창. 공고·리포트(분석 기록 포함)·작성 방향이 함께 지워지고 되돌릴 수 없다. BE 공고 삭제 API는 이미 있다.
 
 --- | --- | --- |
-| 화면이 열릴 때 | 내 공고 목록 (최신순): `jd_id`, `company`, `position`, 상태(작성 중·분석 중·분석 완료·분석 실패), 분석 날짜, (분석 완료면) 필수·우대 충족 수 | |
+| 화면이 열릴 때 | 내 공고 목록 (최신순): `jd_id`, `company`, `position`, 상태(작성 중·분석 중·분석 완료·분석 실패), 분석 날짜, (분석 완료면) 필수·우대 충족 수 |`GET /api/job-postings` |
 
 ### 저장·변경
 
 | 언제 | 필요한 데이터 | 엔드포인트 |
 | --- | --- | --- |
-| "새 공고" | 없음. `/apply/new/jd`로 이동 | |
+| "새 공고" | 없음. `/apply/new/jd`로 이동 |`없음 (웹에서 이동)` |
 
 ### 확인할 것
 
