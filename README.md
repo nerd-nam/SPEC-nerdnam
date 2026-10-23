@@ -12,7 +12,7 @@ nerdnam(AI 맞춤형 지원서 코치) 프로젝트의 공용 문서 레포지�
 | `design/` | 화면 디자인 (HTML·CSS·JS, 빌드 없이 바로 열림) | 웹, API |
 | `contracts/` | 서버 간 API 계약 (OpenAPI) · 추가 예정 | 경계를 맞대는 두 담당 |
 | `fixtures/` | 세 레포가 함께 쓰는 예시 데이터 · 추가 예정 | 전원 |
-| `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`, `0004-remove-project-image.md`) | 전원 |
+| `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`, `0004-remove-project-image.md`, `0005-eks-serving.md`) | 전원 |
 
 ## 화면 디자인 보는 법
 
@@ -46,4 +46,5 @@ design/
 
 - **결정은 문서에 남긴다.** 바뀐 결정은 `기획서.md`에 반영하고, 중요한 결정은 `adr/`에 짧게 기록합니다.
 - **계약 변경은 이 레포의 PR로만 한다.** `contracts/` 변경은 세 담당 모두 리뷰합니다. 합의된 계약에는 `contracts-vX.Y.Z` 태그를 달고, 각 서버 레포는 따르는 태그를 README에 적습니다.
+- **기획서 버전 번호는 겹치지 않게 한다.** PR을 올리기 전에 열린 PR이 쓰는 기획서 버전을 확인하고 그다음 번호를 씁니다. 그래도 겹치면 나중에 머지되는 PR이 번호를 올리고, 변경 이력은 두 줄을 모두 남깁니다.
 - **예시 데이터는 하나로 맞춘다.** 웹 목업, API 통합 테스트, AI 평가 세트가 `fixtures/`의 같은 데이터를 씁니다.
