@@ -1,0 +1,81 @@
+{
+  "_source": "기획서.md 4.5·7.1, design/jd.js(채운 예시)",
+  "jd_id": "jd_01",
+  "company": "OO페이",
+  "position": "백엔드 개발자 (결제 플랫폼)",
+  "url": "",
+  "requirements": [
+    {
+      "id": "r_1",
+      "type": "required",
+      "text": "Java/Spring 기반 개발 경력 3년 이상",
+      "skills_raw": [
+        "Java",
+        "Spring"
+      ],
+      "skills": [
+        "Java",
+        "Spring"
+      ],
+      "min_years": 3
+    },
+    {
+      "id": "r_2",
+      "type": "required",
+      "text": "RDBMS 설계 및 쿼리 튜닝 경험",
+      "skills_raw": [
+        "RDBMS"
+      ],
+      "skills": [],
+      "min_years": null
+    },
+    {
+      "id": "r_3",
+      "type": "required",
+      "text": "대용량 트래픽 처리 경험",
+      "skills_raw": [],
+      "skills": [],
+      "min_years": null
+    },
+    {
+      "id": "r_4",
+      "type": "preferred",
+      "text": "Kafka 등 메시지 큐 운영 경험",
+      "skills_raw": [
+        "Kafka"
+      ],
+      "skills": [
+        "Kafka"
+      ],
+      "min_years": null
+    },
+    {
+      "id": "r_5",
+      "type": "preferred",
+      "text": "결제·금융 도메인 경험",
+      "skills_raw": [],
+      "skills": [],
+      "min_years": null
+    },
+    {
+      "id": "r_6",
+      "type": "preferred",
+      "text": "Kubernetes 운영 경험",
+      "skills_raw": [
+        "Kubernetes"
+      ],
+      "skills": [
+        "Kubernetes"
+      ],
+      "min_years": null
+    }
+  ],
+  "context": {
+    "duties": [
+      "결제 승인·정산 시스템 개발 및 운영",
+      "대용량 트래픽 대응을 위한 아키텍처 개선"
+    ],
+    "intro": "온라인 결제와 정산 서비스를 만드는 핀테크 회사",
+    "talent": ""
+  }
+}
