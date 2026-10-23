@@ -16,7 +16,7 @@
 
 ```text
 AWS 서울(ap-northeast-2)
-└─ VPC — 퍼블릭 서브넷 2개(AZ a, c), NAT 없음 (D-11)
+└─ VPC — 퍼블릭 서브넷 2개(AZ a, c), NAT 없음 (ADR-0001)
    └─ EKS 클러스터 nerdnam
       ├─ 관리형 노드 그룹 system: t3.large 1대 (상시) — Karpenter, CoreDNS, API 서버(BE), Redis
       └─ Karpenter NodePool gpu: g4dn.xlarge 0~1대 (AZ a 고정, 온디맨드)
@@ -64,7 +64,7 @@ AWS 서울(ap-northeast-2)
 
 - AI 서버는 클러스터 안 주소 `http://ai.nerdnam.svc:8000`만 있다(ClusterIP). 인터넷에 열지 않는다.
 - **NetworkPolicy**(VPC CNI의 network policy 기능 사용): `ai` Pod는 라벨 `app: api`인 Pod의 8000 포트 요청만 받는다.
-- 노드는 퍼블릭 서브넷에 두되 보안 그룹에서 외부 인바운드를 막는다. 이미지·모델 다운로드만 밖으로 나간다(NAT 비용 없음, D-11).
+- 노드는 퍼블릭 서브넷에 두되 보안 그룹에서 외부 인바운드를 막는다. 이미지·모델 다운로드만 밖으로 나간다(NAT 비용 없음, ADR-0001).
 - EKS API 엔드포인트는 팀원 IP만 허용한다. 이미지 빌드·배포는 GitHub Actions OIDC로 한다(Access Key를 저장하지 않음).
 
 ### 5. 코드 위치와 구성
@@ -126,5 +126,4 @@ ADR-0001(EC2 1대)보다 **상시 비용이 월 약 $140 늘어난다**(컨트�
 ## 남은 결정 (D-11)
 
 - [ ] API 서버(BE)도 같은 EKS 클러스터에 올리는지. 밖에 두면 내부 로드밸런서가 필요해 4절이 바뀐다.
-- [ ] NAT 없이 퍼블릭 서브넷 + 보안 그룹으로 갈지.
 - [ ] `infra/` 코드 위치: 별도 레포(`nerdnam-infra`, BE도 같은 클러스터면 추천) / AI 레포 안.
