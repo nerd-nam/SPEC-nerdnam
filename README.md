@@ -10,7 +10,7 @@ nerdnam(AI 맞춤형 지원서 코치) 프로젝트의 공용 문서 레포지�
 | `기획서.md` | 서비스 정의, 기능 명세, 데이터 설계, 아키텍처, 로드맵 | 전원 |
 | `작업목록.md` | 프론트엔드·백엔드·AI 담당별 작업 목록, 진행 순서, 먼저 정할 것 | 전원 |
 | `design/` | 화면 디자인 (HTML·CSS·JS, 빌드 없이 바로 열림) | 웹, API |
-| `contracts/` | 서버 간 API 계약 (OpenAPI) · 추가 예정 | 경계를 맞대는 두 담당 |
+| `contracts/` | 서버 간 API 계약 (OpenAPI). `api-ai.openapi.yaml`은 AI 레포 `app/schemas.py`에서 내보냄 (`scripts/export_contract.py`) | 경계를 맞대는 두 담당 |
 | `fixtures/` | 세 레포가 함께 쓰는 예시 데이터 (`fixtures/README.md`) | 전원 |
 | `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`, `0004-remove-project-image.md`) | 전원 |
 
