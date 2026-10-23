@@ -20,6 +20,7 @@
 | 인프라 | AWS 서울 리전 GPU 1대 (EKS 노드로 운영, ADR-0005). **g4dn.xlarge(T4 16GB) 기본**, 품질·속도가 부족하면 g6.xlarge(L4 24GB) |
 | 운영 | 사용할 때만 켜고, 매일 정해진 시간에 자동 종료(EKS CronJob으로 replicas 0, ADR-0005). AWS Budgets 알림 설정 |
 | 정밀도 | L4: LLM BF16 또는 FP8, 임베딩 BF16 / T4: LLM FP16, 임베딩 FP32 (T4는 BF16·FP8 미지원, 임베딩을 FP16으로 돌리면 NaN 위험) |
+| 라이선스·다운로드 | 두 모델 모두 **Apache-2.0**(상업 사용 가능), Hugging Face 공개 모델(gated 아님)이라 받을 때 토큰이 필요 없다. Gemma 금지 용도 정책(Prohibited Use Policy)은 지킨다 (2026-10-23 확인) |
 
 ### 지켜야 할 규칙
 
@@ -112,6 +113,15 @@
   - pgvector 컬럼 차원을 768로 맞춘다(계약 C-04에 명시).
 - **FE:** 작업 상태의 실패 이유가 "GPU 서버 꺼짐"이면 "잠시 후 다시 시도"를 안내한다(C-02 공통 3, 기존 F4 메시지 재사용).
 - **비용:** GPU 요금은 켜 둔 시간만큼 나간다. 인스턴스를 꺼도 EBS 요금은 계속 나간다. NAT Gateway는 만들지 않는다. 클로즈드 베타(4주) 동안 24시간 운영할 예산은 없으므로, G3 전에 운영 방식을 따로 정한다.
+
+## GPU 서버에서 처음 확인할 것 (docker compose)
+
+Kaggle에서는 두 모델을 같은 T4에 올려 확인했지만(위), AI 레포의 실행 설정(`docker-compose.yml`, AI 서버 이미지)으로는 아직 돌려 보지 않았다. 처음 띄울 때 아래 순서로 확인한다.
+
+- [ ] **AI 컨테이너만 먼저** (`docker compose up -d --no-deps ai`): AI 서버 이미지의 torch 2.14.1(CUDA 13)이 서버 드라이버(580 이상 필요)에서 도는지, 임베딩 VRAM 실측(`nvidia-smi`). 추정은 약 1.5~2GB(위 `/embed` 확인의 메모리). `/health`가 `embedding: ready`, `llm: error`면 정상
+- [ ] **전체** (`docker compose down && docker compose up -d`): vLLM이 healthy가 된 뒤 AI 서버가 뜨는지, 두 모델 합계 VRAM이 15,360MiB 안인지, `/health`가 모두 `ready`인지
+- [ ] **vLLM만 재시작될 때**: 임베딩이 GPU를 잡은 상태에서 vLLM이 다시 뜨면 `gpu-memory-utilization`(0.80)만큼을 못 잡아 실패할 수 있다. 실패하면 AI 서버도 함께 재시작하는 방법을 정한다
+- [ ] 켜는 데 걸리는 시간 (첫 실행 / 캐시가 있을 때) → 아래 남은 결정, 기획서 5.5 "최대 15분" 갱신
 
 ## 남은 결정
 
