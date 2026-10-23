@@ -208,7 +208,7 @@
     $brand.insertAdjacentHTML('beforebegin', '<div class="header__left"></div>');
     var $left = document.querySelector('.header__left');
     $left.appendChild($brand);
-    $left.insertAdjacentHTML('beforeend', '<nav class="nav" aria-label="주 메뉴"><a href="library.html" aria-current="page">내 경험</a><a href="jd.html">지원 준비</a></nav>');
+    $left.insertAdjacentHTML('beforeend', '<nav class="nav" aria-label="주 메뉴"><a href="library.html" aria-current="page">내 경험</a><a href="apply.html">지원 준비</a></nav>');
     document.querySelector('.header .header-link').outerHTML = '<button class="avatar" aria-label="계정 메뉴">김</button>';
     document.querySelector('nav[aria-label="온보딩 단계"]').hidden = true;
     var $badge = document.querySelector('.page-head .badge');

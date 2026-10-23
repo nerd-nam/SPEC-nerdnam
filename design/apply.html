@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S10 공고 목록 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- 상태별로 보기: apply.html (공고 4개: 작성 중·분석 중·분석 실패·분석 완료) | apply.html#empty (공고 없음) -->
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__left">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+        <nav class="nav" aria-label="주 메뉴">
+          <a href="library.html">내 경험</a>
+          <a href="apply.html" aria-current="page">지원 준비</a>
+        </nav>
+      </div>
+      <button class="avatar" aria-label="계정 메뉴">김</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-head">
+      <div class="page-head__text">
+        <h1 class="page-title">지원 준비</h1>
+        <p class="page-desc">지원할 공고마다 적합도 리포트와 작성 방향을 받아요. 최근에 고친 공고부터 보여요.</p>
+      </div>
+      <a class="btn btn--primary" href="jd.html#empty"><svg class="i" aria-hidden="true"><use href="#i-plus"></use></svg>새 공고</a>
+    </div>
+
+    <!-- 공고 없음 (#empty) -->
+    <section id="empty" class="card card--dashed" aria-labelledby="empty-title" style="padding: 40px 28px; align-items: center; text-align: center; gap: 12px" hidden>
+      <h2 id="empty-title" class="card__title">아직 공고가 없어요</h2>
+      <p class="card__desc" style="line-height: 1.6">지원할 공고의 필수·우대사항을 옮겨 적으면, 내 경험으로 적합도를 보고 작성 방향을 받을 수 있어요.</p>
+      <a class="btn btn--primary" href="jd.html#empty"><svg class="i" aria-hidden="true"><use href="#i-plus"></use></svg>첫 공고 입력하기</a>
+    </section>
+
+    <!-- 공고 목록: 최근에 고친 것부터 (BE 공고 목록 API). 카드마다 상태 배지, 날짜, (완료면) 충족 수, 상태에 맞는 버튼, 삭제 -->
+    <ul id="list" class="plain stack" aria-label="공고 목록" style="gap: 12px">
+      <!-- 분석 완료: 리포트(S08) + 작성 방향(S09) -->
+      <li class="card" style="padding: 22px; gap: 12px">
+        <div class="row row--between" style="align-items: flex-start; gap: 10px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--ok"><svg class="i i--sm i--bold" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-check"></use></svg>분석 완료</span><span class="page-meta" style="font-size: 13px">OO페이 · 2026.10.21 분석</span></div>
+            <h2 style="font-size: 18px; font-weight: 700">백엔드 개발자 (결제 플랫폼)</h2>
+            <p style="font-size: 14px; color: var(--muted)">필수 <strong style="color: var(--ink)">3 / 3</strong> 충족 · 우대 <strong style="color: var(--ink)">1 / 3</strong> 충족 · 부분 1</p>
+          </div>
+          <button class="btn btn--ghost btn--sm" data-delete="OO페이 · 백엔드 개발자 (결제 플랫폼)">삭제</button>
+        </div>
+        <div class="row row--end" style="gap: 8px">
+          <a class="btn btn--sm" href="report.html">리포트</a>
+          <a class="btn btn--primary btn--sm" href="guide.html#motive">작성 방향 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+        </div>
+      </li>
+
+      <!-- 분석 중: 리포트(S08)에서 진행 상황 -->
+      <li class="card" style="padding: 22px; gap: 12px">
+        <div class="row row--between" style="align-items: flex-start; gap: 10px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--info">분석 중</span><span class="page-meta" style="font-size: 13px">△△커머스 · 2026.10.23 분석 시작</span></div>
+            <h2 style="font-size: 18px; font-weight: 700">서버 개발자</h2>
+          </div>
+          <button class="btn btn--ghost btn--sm" data-delete="△△커머스 · 서버 개발자">삭제</button>
+        </div>
+        <div class="row row--end"><a class="btn btn--sm" href="report.html">진행 상황 보기</a></div>
+      </li>
+
+      <!-- 분석 실패: 리포트(S08)의 실패 상자에서 다시 시도 -->
+      <li class="card" style="padding: 22px; gap: 12px">
+        <div class="row row--between" style="align-items: flex-start; gap: 10px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--bad"><svg class="i i--sm" style="width: 12px; height: 12px" aria-hidden="true"><use href="#i-alert"></use></svg>분석 실패</span><span class="page-meta" style="font-size: 13px">□□랩 · 2026.10.22 분석 시도</span></div>
+            <h2 style="font-size: 18px; font-weight: 700">백엔드 엔지니어</h2>
+          </div>
+          <button class="btn btn--ghost btn--sm" data-delete="□□랩 · 백엔드 엔지니어">삭제</button>
+        </div>
+        <div class="row row--end"><a class="btn btn--sm" href="report.html">다시 시도하기</a></div>
+      </li>
+
+      <!-- 작성 중: 아직 분석하지 않은 공고. 공고 입력(S07)으로 -->
+      <li class="card card--dashed" style="padding: 22px; gap: 12px">
+        <div class="row row--between" style="align-items: flex-start; gap: 10px">
+          <div class="stack" style="gap: 6px">
+            <div class="row"><span class="badge badge--warn">작성 중</span><span class="page-meta" style="font-size: 13px">◇◇페이먼츠 · 2026.10.22 수정</span></div>
+            <h2 style="font-size: 18px; font-weight: 700">백엔드 개발자</h2>
+          </div>
+          <button class="btn btn--ghost btn--sm" data-delete="◇◇페이먼츠 · 백엔드 개발자">삭제</button>
+        </div>
+        <div class="row row--end"><a class="btn btn--sm" href="jd.html#filled">이어서 작성하기 <svg class="i i--sm" aria-hidden="true"><use href="#i-arrow"></use></svg></a></div>
+      </li>
+    </ul>
+  </main>
+
+  <!-- 공고 삭제 확인: 공고·분석 기록·작성 방향이 함께 지워진다 -->
+  <div class="modal" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-title" hidden>
+    <div class="modal__box">
+      <h2 id="delete-title" class="card__title">이 공고를 삭제할까요?</h2>
+      <p class="card__desc" style="line-height: 1.6"><strong id="delete-name" style="color: var(--ink)"></strong><br>공고와 적합도 리포트(분석 기록 포함), 작성 방향이 함께 지워지고 되돌릴 수 없어요. 내 경험은 지워지지 않아요.</p>
+      <div class="row row--end" style="margin-top: 6px">
+        <button class="btn" data-modal-close>취소</button>
+        <button class="btn btn--danger" id="delete-confirm">삭제</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/common.js"></script>
+  <script>
+    (function () {
+      var $list = document.getElementById('list');
+      var $empty = document.getElementById('empty');
+      var $modal = document.getElementById('delete-modal');
+      var target = null;
+
+      function showEmpty(on) { $empty.hidden = !on; $list.hidden = on; }
+      function syncHash() { showEmpty(location.hash === '#empty'); }
+
+      $list.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-delete]');
+        if (!b) return;
+        target = b.closest('li');
+        document.getElementById('delete-name').textContent = b.dataset.delete;
+        $modal.hidden = false;
+        $modal.querySelector('[data-modal-close]').focus();
+      });
+      $modal.querySelector('[data-modal-close]').addEventListener('click', function () { $modal.hidden = true; });
+      document.getElementById('delete-confirm').addEventListener('click', function () {
+        if (target) target.remove();
+        $modal.hidden = true;
+        if (!$list.children.length) showEmpty(true);
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $modal.hidden = true; });
+      window.addEventListener('hashchange', syncHash);
+      syncHash();
+    })();
+  </script>
+</body>
+</html>
