@@ -17,7 +17,7 @@
 | LLM | **Qwen/Qwen3.5-4B**, vLLM으로 서빙, `--language-model-only` (2026-10-22 9B에서 변경, 아래 "변경") |
 | 품질이 부족할 때 | ① 9B 양자화: `RedHatAI/Qwen3.5-9B-FP8-dynamic`(L4), `RedHatAI/Qwen3.5-9B-quantized.w4a16` ② `Qwen/Qwen3.5-9B`(L4) |
 | 임베딩 | **google/embeddinggemma-2**, **텍스트만** 임베딩, 768차원, GPU 서빙. 텍스트 인코더만 로드 |
-| 인프라 | AWS 서울 리전 EC2 GPU 1대. **g4dn.xlarge(T4 16GB) 기본**, 품질·속도가 부족하면 g6.xlarge(L4 24GB) |
+| 인프라 | AWS 서울 리전 GPU 1대 (EKS 노드로 운영, ADR-0005). **g4dn.xlarge(T4 16GB) 기본**, 품질·속도가 부족하면 g6.xlarge(L4 24GB) |
 | 운영 | 사용할 때만 켜고, 매일 정해진 시간에 자동 종료(EventBridge Scheduler 또는 cron). AWS Budgets 알림 설정 |
 | 정밀도 | L4: LLM BF16 또는 FP8, 임베딩 BF16 / T4: LLM FP16, 임베딩 FP32 (T4는 BF16·FP8 미지원, 임베딩을 FP16으로 돌리면 NaN 위험) |
 
