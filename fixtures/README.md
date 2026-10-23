@@ -9,6 +9,7 @@
 | `chunks.json` | 검색용 청크 13개 (기술 8, 경력 1, 프로젝트 요약 2, 사례 2) | 기획서 4.4, 5.5 `/embed` |
 | `jd.json` | OO페이 공고, 요건 6줄과 주요 업무 | 기획서 4.5·7.1, `design/jd.js` |
 | `match.json` | 요건별 판정·근거·갭 대응 가이드, 한 줄 진단 | 기획서 4.5·7.1, `design/report.js`·`report.html` |
+| `guide.json` | 작성 방향 5개 탭의 `/guide` 응답 (`guides.<tab>`) | api-ai 계약 v0.2 `GuideResponse`, `design/assets/js/guide-data.js` |
 
 ## 규칙
 
@@ -20,7 +21,4 @@
 - **enum 값:** 기획서 표기(소문자: `framework`, `full_time`, `met`)를 따른다. 대소문자는 C-03 계약에서 정한다 (D-10).
 - **청크 `text`:** 4.4 구성을 따른 예시다. 실제 조합 방식은 API 서버가 정한다.
 - **기술명:** API 서버 기술 사전(`V2__seed_skill_catalog.sql`)의 표준 이름을 쓴다. `Spring Batch`는 사전에 없어 프로젝트에서 추가한 기술(숙련도 1, 학습 중)로 넣었다.
-
-## 아직 없는 것
-
-- **작성 방향 결과(`/guide`):** 응답 형식이 C-04에서 정해지면 추가한다. 그전에는 `design/assets/js/guide-data.js`를 참고한다.
+- **`guide.json`:** `design/assets/js/guide-data.js` 예시를 계약 모양으로 옮겼다. 화면 고정 문구(`outlineTitle`, `regenHint`)와 제작 도구 이름(`kind`로 정해짐)은 웹이 가지므로 없다. 요건 문구·필수·우대는 `requirement_id`로 `jd.json`에서 찾는다.
