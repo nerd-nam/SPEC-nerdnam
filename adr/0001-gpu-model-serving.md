@@ -122,6 +122,8 @@ Kaggle에서는 두 모델을 같은 T4에 올려 확인했지만(위), AI 레�
 - [ ] **전체** (`docker compose down && docker compose up -d`): vLLM이 healthy가 된 뒤 AI 서버가 뜨는지, 두 모델 합계 VRAM이 15,360MiB 안인지, `/health`가 모두 `ready`인지
 - [ ] **vLLM만 재시작될 때**: 임베딩이 GPU를 잡은 상태에서 vLLM이 다시 뜨면 `gpu-memory-utilization`(0.80)만큼을 못 잡아 실패할 수 있다. 실패하면 AI 서버도 함께 재시작하는 방법을 정한다
 - [ ] 켜는 데 걸리는 시간 (첫 실행 / 캐시가 있을 때) → 아래 남은 결정, 기획서 5.5 "최대 15분" 갱신
+- [ ] **리포트 20초 목표**: `/requirements/extract` + `/match` + `/gap-guide` 합계. Mac(bf16)에서는 약 80~110초였다(추출 11~14초 + 판정 53~73초 + 갭 가이드 16~26초). 검증에 걸려 다시 생성하면 그 단계가 두 배가 된다(`/gap-guide`가 API 제한 20초를 넘으면 기본 문구로 대체, ADR-0003)
+- [ ] **동시 호출 부하**: `/match`는 요건 수만큼, `/guide`는 탭 5개를 동시에 부른다(vLLM `--max-num-seqs 16`). 분석 2~3건이 겹칠 때 API 읽기 제한(`/match` 30초, `/guide` 120초) 안인지 `evals/load_test.py`로 잰다. 넘으면 "탭을 열 때 그 탭만 만들기"(C-02 S09 확인할 것 1)로 동시 호출을 줄인다
 
 ## 남은 결정
 
