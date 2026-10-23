@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>S01-2 약관 동의 · nerdnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- 로그인했지만 지금 약관에 동의 기록이 없을 때 (403 CONSENT_REQUIRED). 약관 버전이 올라가면 다시 나온다 (C-02 S01).
+       동의 전에는 다른 화면을 쓸 수 없으므로 머리글에 메뉴를 두지 않는다. -->
+  <div style="min-height: 100vh; display: flex; flex-direction: column">
+    <header class="header">
+      <div class="header__inner">
+        <a class="brand" href="index.html">
+          <span class="brand__mark"><svg class="i i--sm i--bold" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="brand__name">nerdnam</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="page" style="flex: 1; width: 100%; max-width: 560px; padding-top: 72px">
+      <section class="card card--lg" aria-labelledby="consent-title" style="gap: 20px">
+        <div class="stack" style="gap: 8px">
+          <h1 id="consent-title" class="page-title" style="font-size: 24px">약관에 동의해 주세요</h1>
+          <p class="card__desc" style="font-size: 15px; line-height: 1.6">서비스를 계속 쓰려면 지금 약관(버전 <strong style="color: var(--ink)">2026-11</strong>)에 동의해 주세요. 약관이 바뀌면 다시 동의를 받아요. 동의하기 전에는 내 경험과 지원 준비를 볼 수 없어요.</p>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="agree">
+          <span>[필수] 개인정보 수집·이용과 이용약관에 동의합니다. <a href="#privacy">내용 보기</a></span>
+        </label>
+        <p id="privacy" class="callout callout--muted">입력한 이력은 내 계정 안에서만 검색에 쓰여요. 탈퇴하면 원본과 검색용 데이터가 함께 삭제돼요.</p>
+
+        <div class="stack" style="gap: 10px">
+          <!-- 동의하면 하던 화면(?next=)으로, 없으면 내 경험으로 -->
+          <a class="btn btn--primary btn--lg" id="continue" href="library.html" aria-disabled="true">동의하고 계속</a>
+          <!-- 로그아웃 후 S01 -->
+          <a class="btn btn--lg" href="index.html">동의하지 않고 나가기</a>
+        </div>
+        <p class="page-meta" style="font-size: 13px; line-height: 1.6">서비스를 그만 쓰고 싶다면 탈퇴할 수 있어요. 탈퇴하면 입력한 이력과 검색용 데이터가 바로 삭제돼요. <button class="btn btn--text" id="withdraw" style="min-height: 0; padding: 0; font-size: 13px; color: var(--bad)">탈퇴하기</button></p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <span>© nerdnam</span>
+        <a href="#privacy">개인정보 처리방침</a>
+        <a href="#terms">이용약관</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 탈퇴 확인 -->
+  <div class="modal" id="withdraw-modal" role="dialog" aria-modal="true" aria-labelledby="withdraw-title" hidden>
+    <div class="modal__box">
+      <h2 id="withdraw-title" class="card__title">탈퇴할까요?</h2>
+      <p class="card__desc" style="line-height: 1.6">기술스택·경력·프로젝트와 사례, 공고·리포트·작성 방향이 모두 바로 삭제되고 되돌릴 수 없어요.</p>
+      <div class="row row--end" style="margin-top: 6px">
+        <button class="btn" data-modal-close>취소</button>
+        <a class="btn btn--danger" href="index.html">탈퇴</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/common.js"></script>
+  <script>
+    (function () {
+      var $agree = document.getElementById('agree');
+      var $continue = document.getElementById('continue');
+      // 체크해야 "동의하고 계속"을 누를 수 있다 (S01과 같은 규칙)
+      function sync() { $continue.setAttribute('aria-disabled', String(!$agree.checked)); }
+      $agree.addEventListener('change', sync);
+      $continue.addEventListener('click', function (e) { if (!$agree.checked) e.preventDefault(); });
+      sync();
+
+      var $modal = document.getElementById('withdraw-modal');
+      document.getElementById('withdraw').addEventListener('click', function () { $modal.hidden = false; $modal.querySelector('[data-modal-close]').focus(); });
+      $modal.querySelector('[data-modal-close]').addEventListener('click', function () { $modal.hidden = true; });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $modal.hidden = true; });
+    })();
+  </script>
+</body>
+</html>

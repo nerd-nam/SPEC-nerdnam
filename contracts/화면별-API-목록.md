@@ -88,6 +88,12 @@
    3. **현재 약관 동의 기록이 없으면 서비스 API는 `403` + `title: "CONSENT_REQUIRED"` + `termsVersion`**이다. 이때도 내 정보 조회(`GET /api/me`, `consentRequired: true`)·동의 기록(`POST /api/me/consents`)·탈퇴·로그아웃·CSRF 준비는 할 수 있다
    4. 웹이 `POST /api/me/consents`로 동의를 기록하면 그때부터 전부 열린다
    약관 버전이 올라가면 같은 `403`이 다시 나오므로 웹은 동의 화면을 한 번 더 보여 준다. (개발용 `X-Member-Id` 헤더 인증은 이 제한을 받지 않는다 — local 전용이다.)
+7. **약관 동의 화면 S01-2 (FE 결정, 2026-10-23, 기획서 v1.33)**: 디자인 `design/consent.html`, 웹 주소 `/consent?next=돌아갈주소`.
+   - 언제: 서비스 API가 `403 CONSENT_REQUIRED`를 주거나, 로그인 후 `GET /api/me`의 `consentRequired`가 참인데 S01에서 받은 동의가 없을 때(약관 버전이 올라간 기존 사용자 등). 서버가 "처음 동의"와 "바뀐 약관"을 구분해 주지 않아 문구는 하나다.
+   - 약관 버전: 403 응답이나 `GET /api/me`의 `termsVersion`을 보여 준다.
+   - "동의하고 계속"(체크해야 누름) → `POST /api/me/consents` → `next`로. `next`는 웹 안 주소(`/`로 시작, `//` 아님)만 받고, 아니면 `/library`.
+   - "동의하지 않고 나가기" → `POST /api/auth/logout` → S01. "탈퇴하기" → 확인창 → `DELETE /api/me` → S01.
+   - 머리글은 로고만 둔다(동의 전에는 다른 화면을 쓸 수 없음).
 
 ---
 
