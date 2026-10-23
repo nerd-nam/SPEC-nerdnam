@@ -1,6 +1,6 @@
 {
   "_source": "기획서.md 4.1·4.2, design/skills.html·career.html",
-  "user_id": "u_01",
+  "user_id": 1,
   "skills": [
     {
       "name": "Java",
@@ -45,7 +45,7 @@
   ],
   "careers": [
     {
-      "career_id": "c_01",
+      "career_id": 1,
       "company": "OO커머스",
       "team": "결제플랫폼팀",
       "job_title": "백엔드 개발자",
