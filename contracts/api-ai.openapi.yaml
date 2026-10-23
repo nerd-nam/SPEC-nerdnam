@@ -13,7 +13,7 @@ info:
     - `/guide`는 탭마다 1회 호출, JSON 응답(SSE 아님).
 
     '
-  version: 0.1.0
+  version: 0.2.0
 paths:
   /embed:
     post:
@@ -224,6 +224,45 @@ components:
       - text
       title: Candidate
       description: 청크. 사용자 정보 없이 id와 텍스트만 (기획서 5.5)
+    CareerContent:
+      properties:
+        message:
+          type: string
+          title: Message
+        outline:
+          items:
+            $ref: '#/components/schemas/Paragraph'
+          type: array
+          minItems: 1
+          title: Outline
+        keywords:
+          items:
+            type: string
+          type: array
+          title: Keywords
+          default: []
+        avoid:
+          items:
+            type: string
+          type: array
+          title: Avoid
+          default: []
+        tab:
+          type: string
+          const: career
+          title: Tab
+        rewrites:
+          items:
+            $ref: '#/components/schemas/Rewrite'
+          type: array
+          title: Rewrites
+          default: []
+      type: object
+      required:
+      - message
+      - outline
+      - tab
+      title: CareerContent
     Clarification:
       properties:
         key:
@@ -249,6 +288,23 @@ components:
       - question
       title: Clarification
       description: 확인 질문. key가 없거나 겹치면 API가 q1, q2…를 붙인다
+    Coverage:
+      properties:
+        requirement_id:
+          type: integer
+          title: Requirement Id
+        covered:
+          type: boolean
+          title: Covered
+        where:
+          type: string
+          title: Where
+      type: object
+      required:
+      - requirement_id
+      - covered
+      - where
+      title: Coverage
     EmbedItem:
       properties:
         text:
@@ -613,9 +669,21 @@ components:
           type: string
           title: Prompt Version
         content:
-          additionalProperties: true
-          type: object
+          oneOf:
+          - $ref: '#/components/schemas/MotiveContent'
+          - $ref: '#/components/schemas/IntroContent'
+          - $ref: '#/components/schemas/PortfolioContent'
+          - $ref: '#/components/schemas/CareerContent'
+          - $ref: '#/components/schemas/ImageContent'
           title: Content
+          discriminator:
+            propertyName: tab
+            mapping:
+              career: '#/components/schemas/CareerContent'
+              image: '#/components/schemas/ImageContent'
+              intro: '#/components/schemas/IntroContent'
+              motive: '#/components/schemas/MotiveContent'
+              portfolio: '#/components/schemas/PortfolioContent'
         cited_chunk_ids:
           items:
             type: integer
@@ -673,6 +741,98 @@ components:
       - status
       - models
       title: HealthResponse
+    ImageContent:
+      properties:
+        tab:
+          type: string
+          const: image
+          title: Tab
+        prompts:
+          items:
+            $ref: '#/components/schemas/ImagePrompt'
+          type: array
+          minItems: 1
+          title: Prompts
+        tool_visuals:
+          items:
+            $ref: '#/components/schemas/ToolVisual'
+          type: array
+          title: Tool Visuals
+          default: []
+      type: object
+      required:
+      - tab
+      - prompts
+      title: ImageContent
+    ImagePrompt:
+      properties:
+        title:
+          type: string
+          title: Title
+        purpose:
+          type: string
+          title: Purpose
+        page:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Page
+        ratio:
+          type: string
+          title: Ratio
+        prompt:
+          type: string
+          title: Prompt
+        negative:
+          type: string
+          title: Negative
+      type: object
+      required:
+      - title
+      - purpose
+      - ratio
+      - prompt
+      - negative
+      title: ImagePrompt
+    IntroContent:
+      properties:
+        message:
+          type: string
+          title: Message
+        outline:
+          items:
+            $ref: '#/components/schemas/Paragraph'
+          type: array
+          minItems: 1
+          title: Outline
+        keywords:
+          items:
+            type: string
+          type: array
+          title: Keywords
+          default: []
+        avoid:
+          items:
+            type: string
+          type: array
+          title: Avoid
+          default: []
+        tab:
+          type: string
+          const: intro
+          title: Tab
+        coverage:
+          items:
+            $ref: '#/components/schemas/Coverage'
+          type: array
+          title: Coverage
+          default: []
+      type: object
+      required:
+      - message
+      - outline
+      - tab
+      title: IntroContent
     MatchRequest:
       properties:
         requirements:
@@ -795,6 +955,131 @@ components:
       required:
       - name
       title: Metric
+    MotiveContent:
+      properties:
+        message:
+          type: string
+          title: Message
+        outline:
+          items:
+            $ref: '#/components/schemas/Paragraph'
+          type: array
+          minItems: 1
+          title: Outline
+        keywords:
+          items:
+            type: string
+          type: array
+          title: Keywords
+          default: []
+        avoid:
+          items:
+            type: string
+          type: array
+          title: Avoid
+          default: []
+        tab:
+          type: string
+          const: motive
+          title: Tab
+      type: object
+      required:
+      - message
+      - outline
+      - tab
+      title: MotiveContent
+    Page:
+      properties:
+        order:
+          type: integer
+          title: Order
+        title:
+          type: string
+          title: Title
+        hint:
+          type: string
+          title: Hint
+        kind:
+          type: string
+          enum:
+          - cover
+          - text
+          - diagram
+          - chart
+          title: Kind
+        sources:
+          items:
+            type: integer
+          type: array
+          title: Sources
+          default: []
+      type: object
+      required:
+      - order
+      - title
+      - hint
+      - kind
+      title: Page
+    Paragraph:
+      properties:
+        title:
+          type: string
+          title: Title
+        detail:
+          type: string
+          title: Detail
+        sources:
+          items:
+            type: integer
+          type: array
+          title: Sources
+          default: []
+      type: object
+      required:
+      - title
+      - detail
+      title: Paragraph
+    PortfolioContent:
+      properties:
+        message:
+          type: string
+          title: Message
+        outline:
+          items:
+            $ref: '#/components/schemas/Paragraph'
+          type: array
+          minItems: 1
+          title: Outline
+        keywords:
+          items:
+            type: string
+          type: array
+          title: Keywords
+          default: []
+        avoid:
+          items:
+            type: string
+          type: array
+          title: Avoid
+          default: []
+        tab:
+          type: string
+          const: portfolio
+          title: Tab
+        pages:
+          items:
+            $ref: '#/components/schemas/Page'
+          type: array
+          maxItems: 8
+          minItems: 4
+          title: Pages
+      type: object
+      required:
+      - message
+      - outline
+      - tab
+      - pages
+      title: PortfolioContent
     RequirementLine:
       properties:
         id:
@@ -888,6 +1173,46 @@ components:
       - prompt_version
       - episodes
       title: RestructureResponse
+    Rewrite:
+      properties:
+        before:
+          type: string
+          title: Before
+        after:
+          type: string
+          title: After
+        requirement_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Requirement Id
+      type: object
+      required:
+      - before
+      - after
+      title: Rewrite
+    ToolVisual:
+      properties:
+        name:
+          type: string
+          title: Name
+        page:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Page
+        kind:
+          type: string
+          enum:
+          - diagram
+          - chart
+          title: Kind
+      type: object
+      required:
+      - name
+      - kind
+      title: ToolVisual
+      description: 이미지 생성 대신 도구로 만들 시각자료 (글자·수치가 필요한 도식·차트)
     ValidationError:
       properties:
         loc:
