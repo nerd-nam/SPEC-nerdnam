@@ -61,23 +61,16 @@
             <h2 id="start-title" style="font-size: 22px; font-weight: 700">시작하기</h2>
             <p class="card__desc" style="font-size: 15px">계정을 연결하면 바로 경험 정리를 시작해요.</p>
           </div>
-          <div class="stack" style="gap: 10px">
-            <a class="btn btn--lg" href="skills.html">Google 계정으로 계속</a>
-            <a class="btn btn--lg" href="skills.html">카카오 계정으로 계속</a>
-          </div>
-          <div class="row" style="gap: 12px; flex-wrap: nowrap; font-size: 13px; color: var(--subtle)">
-            <span style="flex: 1; height: 1px; background: var(--line)"></span>또는<span style="flex: 1; height: 1px; background: var(--line)"></span>
-          </div>
-          <div>
-            <label class="label" for="email">이메일</label>
-            <input id="email" class="input" type="email" placeholder="name@example.com" autocomplete="email">
-          </div>
+          <!-- 이메일 로그인은 MVP 이후 (D-8 결정). 동의는 로그인 전에 하도록 소셜 버튼 위에 둔다 -->
           <label class="check">
             <input type="checkbox" checked>
             <span>[필수] 개인정보 수집·이용에 동의합니다. <a href="#privacy">내용 보기</a></span>
           </label>
           <p id="privacy" class="callout callout--muted">입력한 이력은 내 계정 안에서만 검색에 쓰여요. 탈퇴하면 원본과 검색용 데이터가 함께 삭제돼요.</p>
-          <a class="btn btn--primary btn--lg" href="skills.html">이메일로 시작하기</a>
+          <div class="stack" style="gap: 10px">
+            <a class="btn btn--lg" href="skills.html">Google 계정으로 계속</a>
+            <a class="btn btn--lg" href="skills.html">카카오 계정으로 계속</a>
+          </div>
         </section>
       </div>
     </main>
