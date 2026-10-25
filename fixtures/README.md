@@ -7,7 +7,7 @@
 | `profile.json` | 기술스택 8개, 경력 1건 (id 1) | 기획서 4.1·4.2, `design/skills.html`·`career.html` |
 | `projects.json` | 프로젝트 2건, 원문·확인 질문 답변·사례 | 기획서 4.3, `design/project.html`·`review.js`·`library.html` |
 | `chunks.json` | 검색용 청크 13개 (기술 8, 경력 1, 프로젝트 요약 2, 사례 2) | 기획서 4.4, 5.5 `/embed` |
-| `jd.json` | OO페이 공고, 요건 6줄과 주요 업무. 요건의 `expansions`는 P2 `p2_v2` 실제 출력(로컬, ADR-0001) | 기획서 4.5·7.1, `design/jd.js` |
+| `jd.json` | OO페이 공고, 요건 6줄과 주요 업무. 요건의 `expansions`는 P2 `p2_v2` 출력(데스크톱 GGUF Q8_0 임시 확인, Mac 원본 모델에서 다시 확인 예정, ADR-0001) | 기획서 4.5·7.1, `design/jd.js` |
 | `match.json` | 요건별 판정·근거·갭 대응 가이드, 한 줄 진단 | 기획서 4.5·7.1, `design/report.js`·`report.html` |
 | `guide.json` | 작성 방향 5개 탭의 `/guide` 응답 (`guides.<tab>`) | api-ai 계약 v0.2 `GuideResponse`, `design/assets/js/guide-data.js` |
 
