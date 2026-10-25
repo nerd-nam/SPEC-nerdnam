@@ -13,6 +13,7 @@
         "Java",
         "Spring"
       ],
+      "expansions": [],
       "skills": [
         "Java",
         "Spring"
@@ -26,6 +27,10 @@
       "skills_raw": [
         "RDBMS"
       ],
+      "expansions": [
+        "Relational Database Management System",
+        "관계형 데이터베이스 관리 시스템"
+      ],
       "skills": [],
       "min_years": null
     },
@@ -34,6 +39,7 @@
       "type": "required",
       "text": "대용량 트래픽 처리 경험",
       "skills_raw": [],
+      "expansions": [],
       "skills": [],
       "min_years": null
     },
@@ -44,6 +50,7 @@
       "skills_raw": [
         "Kafka"
       ],
+      "expansions": [],
       "skills": [
         "Kafka"
       ],
@@ -54,6 +61,7 @@
       "type": "preferred",
       "text": "결제·금융 도메인 경험",
       "skills_raw": [],
+      "expansions": [],
       "skills": [],
       "min_years": null
     },
@@ -64,6 +72,7 @@
       "skills_raw": [
         "Kubernetes"
       ],
+      "expansions": [],
       "skills": [
         "Kubernetes"
       ],
