@@ -106,5 +106,48 @@
     });
   }
 
+  // 계정 메뉴 (C-02 공통 확인할 것 4, 기획서 v1.43): 앱 머리글의 동그라미(.avatar)를 누르면 이름·이메일, 로그아웃, 탈퇴하기가 열린다.
+  // 버튼으로 여닫는 펼침 상자다(항목이 둘뿐이라 화살표 키 메뉴 대신 Tab 으로 이동). Esc·바깥 클릭·Tab 으로 상자 밖에 나가면 닫힌다.
+  // 로그아웃 → S01. 탈퇴하기 → S01-2 와 같은 확인창 → S01. 이름·이메일은 예시(실제는 GET /api/me).
+  document.querySelectorAll('button.avatar').forEach(function ($btn, n) {
+    var panelId = 'account-panel-' + n;
+    var $wrap = document.createElement('div');
+    $wrap.className = 'account';
+    $btn.parentNode.insertBefore($wrap, $btn);
+    $wrap.appendChild($btn);
+    $btn.setAttribute('aria-label', '김개발 계정 메뉴');
+    $btn.setAttribute('aria-expanded', 'false');
+    $btn.setAttribute('aria-controls', panelId);
+    $wrap.insertAdjacentHTML('beforeend',
+      '<div class="account__panel" id="' + panelId + '" hidden>' +
+      '<div class="account__who"><strong class="account__name">김개발</strong><span class="account__email">dev.kim@example.com</span></div>' +
+      '<a class="account__item" href="index.html">로그아웃</a>' +
+      '<button class="account__item account__item--danger" data-withdraw>탈퇴하기</button>' +
+      '</div>');
+    var $panel = $wrap.querySelector('.account__panel');
+    function setOpen(open) { $panel.hidden = !open; $btn.setAttribute('aria-expanded', String(open)); }
+    $btn.addEventListener('click', function () { setOpen($panel.hidden); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$panel.hidden) { setOpen(false); $btn.focus(); } });
+    document.addEventListener('pointerdown', function (e) { if (!$wrap.contains(e.target)) setOpen(false); });
+    $wrap.addEventListener('focusout', function (e) { if (!$wrap.contains(e.relatedTarget)) setOpen(false); });
+
+    // 탈퇴 확인창 (consent.html 과 같은 문구)
+    document.body.insertAdjacentHTML('beforeend',
+      '<div class="modal" id="account-withdraw-' + n + '" role="dialog" aria-modal="true" aria-labelledby="account-withdraw-title-' + n + '" hidden>' +
+      '<div class="modal__box"><h2 id="account-withdraw-title-' + n + '" class="card__title">탈퇴할까요?</h2>' +
+      '<p class="card__desc" style="line-height: 1.6">기술스택·경력·프로젝트와 사례, 공고·리포트·작성 방향이 모두 바로 삭제되고 되돌릴 수 없어요.</p>' +
+      '<div class="row row--end" style="margin-top: 6px"><button class="btn" data-modal-close>취소</button>' +
+      '<a class="btn btn--danger" href="index.html">탈퇴</a></div></div></div>');
+    var $modal = document.getElementById('account-withdraw-' + n);
+    function closeModal() { $modal.hidden = true; $btn.focus(); }
+    $panel.querySelector('[data-withdraw]').addEventListener('click', function () {
+      setOpen(false);
+      $modal.hidden = false;
+      $modal.querySelector('[data-modal-close]').focus();
+    });
+    $modal.querySelector('[data-modal-close]').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$modal.hidden) closeModal(); });
+  });
+
   window.UI = { esc: esc, icon: icon, copyText: copyText, mountRating: mountRating };
 })();
