@@ -116,6 +116,18 @@ ul.plain, ol.plain { list-style: none; margin: 0; padding: 0; }
 .account__item:hover { background: var(--surface-muted); color: var(--ink); }
 .account__item--danger, .account__item--danger:hover { color: var(--bad); }
 
+/* 소셜 로그인 버튼 (S01, C-02 S01 확인할 것 10, 기획서 v1.44): 각 회사 버튼 가이드의 색만 쓴다. 마우스를 올려도 색을 바꾸지 않는다.
+   Google: 흰 바탕·#747775 테두리·#1F1F1F 글자·4색 G / 카카오: #FEE500 바탕·모서리 12px·검은 말풍선·검정 85% 글자 */
+.social {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; min-height: 48px; padding: 0 16px; border-radius: 12px;
+  font: inherit; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer;
+}
+.social__mark { width: 18px; height: 18px; flex: none; }
+.social--google, .social--google:hover { background: #FFFFFF; border: 1px solid #747775; color: #1F1F1F; }
+.social--kakao, .social--kakao:hover { background: #FEE500; border: 1px solid #FEE500; color: rgba(0, 0, 0, 0.85); }
+.social:disabled, .social[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+
 .page { max-width: 1200px; margin: 0 auto; padding: 40px 32px 64px; display: flex; flex-direction: column; gap: 28px; }
 .page--narrow { max-width: 1040px; }
 .page--mid { max-width: 1120px; }
