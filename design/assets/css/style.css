@@ -95,6 +95,26 @@ ul.plain, ol.plain { list-style: none; margin: 0; padding: 0; }
   width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer;
   background: #DDE3FA; color: var(--accent-ink); font-weight: 700;
 }
+.avatar[aria-expanded="true"] { box-shadow: 0 0 0 3px var(--focus); }
+/* 계정 메뉴 (C-02 공통 확인할 것 4, 기획서 v1.43): 동그라미를 누르면 오른쪽 끝에 맞춰 아래로 열린다 */
+.account { position: relative; }
+.account__panel {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 20;
+  width: max-content; min-width: 220px; max-width: calc(100vw - 32px);
+  padding: 8px; display: flex; flex-direction: column; gap: 2px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px rgba(21, 23, 28, 0.14);
+}
+.account__panel[hidden] { display: none; }
+.account__who { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+.account__name { font-size: 15px; font-weight: 600; }
+.account__email { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.account__item {
+  display: flex; align-items: center; min-height: 44px; padding: 0 12px; border: 0; border-radius: var(--radius-sm);
+  background: transparent; color: var(--ink); font: inherit; font-weight: 500; text-align: left; text-decoration: none; cursor: pointer;
+}
+.account__item:hover { background: var(--surface-muted); color: var(--ink); }
+.account__item--danger, .account__item--danger:hover { color: var(--bad); }
 
 .page { max-width: 1200px; margin: 0 auto; padding: 40px 32px 64px; display: flex; flex-direction: column; gap: 28px; }
 .page--narrow { max-width: 1040px; }
