@@ -205,6 +205,7 @@
   if (READ) {
     // 머리글: 온보딩용("저장하고 나중에 하기") 대신 S06과 같은 앱 머리글 (기획서 v1.21)
     var $brand = document.querySelector('.header .brand');
+    $brand.href = 'library.html'; // 로그인 후 머리글의 로고는 내 경험으로 (기획서 v1.63)
     $brand.insertAdjacentHTML('beforebegin', '<div class="header__left"></div>');
     var $left = document.querySelector('.header__left');
     $left.appendChild($brand);
