@@ -18,12 +18,23 @@
 
 | 항목 | 내용 |
 | --- | --- |
-| LLM | **DeepSeek-V3.1** — Bedrock `deepseek.v3-v1:0`, 문맥 128K, 출력 최대 8K |
+| LLM | **Amazon Nova 2 Lite** — Bedrock `global.amazon.nova-2-lite-v1:0` (Global 교차 리전 추론 프로필) |
 | 임베딩 | **Amazon Titan Text Embeddings V2** — Bedrock `amazon.titan-embed-text-v2:0`, **1024차원**, 정규화 |
-| 리전 | 서울 `ap-northeast-2`, 둘 다 **In-Region** 호출. 교차 리전(Geo·Global)은 쓰지 않는다 |
-| 호출 | AI 서버 → Bedrock Runtime HTTPS. LLM은 OpenAI 호환 Chat Completions(`/openai/v1/chat/completions`)와 `response_format: json_schema`, 임베딩은 InvokeModel |
-| 인증 | Bedrock API 키(Bearer). 운영은 k8s Secret으로 넣고, 로컬은 `.env`에 둔다. 키는 커밋·로그 금지 |
+| 리전 | 호출은 서울 `ap-northeast-2`. 임베딩은 **In-Region**(서울에서만 처리). LLM은 서울에 In-Region이 없어 **Global 프로필 → 요청이 국외 리전에서 처리될 수 있다** |
+| 호출 | AI 서버 → boto3 `bedrock-runtime`. LLM은 Converse API, 임베딩은 InvokeModel |
+| 인증 | boto3 기본 순서: Bedrock API 키(`AWS_BEARER_TOKEN_BEDROCK`) 또는 IAM 자격 증명(운영 Pod 역할). 키는 k8s Secret·로컬 `.env`에 두고 커밋·로그 금지 |
 | AI 서버 | GPU 없는 일반 Pod 1개, 상시 운영. 켜고 끄기(CronJob, replicas 0/1)는 없앤다 |
+
+### LLM 선택 경과
+
+| 모델 | 결과 |
+| --- | --- |
+| DeepSeek-V3.1 (첫 안) | 서울 `bedrock-runtime`에 없음. OpenAI 호환 `bedrock-mantle`에만 있고, mantle 호출은 모든 모델에서 토큰 없이 멈춤(3~4분) |
+| GPT-5.6-Luna (선호안) | 계정의 이용 계약 상태가 `NOT_AVAILABLE`("contact AWS Sales"). IAM 마켓플레이스 권한을 넣어도 같음. OpenAI·Anthropic·Cohere·TwelveLabs 모델 전부 같은 상태 → **AWS 승인 요청 중** |
+| **Nova 2 Lite (지금)** | 계약 없이 바로 사용 가능. 아래 품질 측정에서 형식 오류 없음 |
+| Nova Pro / Lite / Micro (APAC 프로필) | 처리가 아시아·태평양 리전 안으로 묶임. Nova Pro는 스키마 준수 2/3, Lite·Micro는 품질 미측정 |
+
+GPT-5.6-Luna 승인이 나면 AI 서버 설정값 `LLM_MODEL`만 바꾸고 평가를 다시 돌려 비교한다. 응답의 `model` 값이 바뀌어 결과가 섞이지 않는다.
 
 ### BE·FE와의 계약 (C-04)
 
@@ -32,54 +43,62 @@
   - BE는 pgvector 컬럼을 `vector(1024)`로 바꾸고 저장된 청크를 모두 다시 임베딩한다(BE-19).
   - 기존 규칙인 "청크마다 `embedding_model` 저장, 다르면 재임베딩"을 그대로 쓴다.
 - `GPU_UNAVAILABLE`은 이름을 그대로 두고, 뜻을 "AI 모델 서비스를 지금 쓸 수 없음"으로 넓힌다. AI 서버가 503을 돌려주는 경우는 다음과 같다.
-  - 예열 중이거나 예열 실패
-  - Bedrock 호출 한도 초과(429)
-  - Bedrock 장애(5xx)
+  - 시작 직후 연결 확인 중이거나 확인 실패
+  - Bedrock 호출 한도 초과(Throttling)
+  - Bedrock 일시 장애(ServiceUnavailable·InternalServer·ModelError 등)
   - Bedrock 연결 실패
-- Bedrock이 요청을 거부하면(400·403 등) 502(`AI_ERROR`), 읽기 시간 초과는 504(`TIMEOUT`)다.
+- Bedrock이 요청을 거부하면(Validation·AccessDenied 등) 502(`AI_ERROR`), 읽기 시간 초과는 504(`TIMEOUT`)다.
 
 ### AI 서버 내부
 
-- **JSON 스키마 강제:** Bedrock 규칙에 맞게 스키마를 손본다.
-  - object마다 `additionalProperties: false`를 붙인다.
-  - `minItems`는 0이나 1만 남기고, 길이·범위 제약은 뺀다.
+- **JSON 출력 강제:** Nova는 Converse의 구조화 출력(`outputConfig` json_schema)을 지원하지 않는다. 그래서 도구 하나(`out`)의 입력 스키마로 출력 스키마를 주고 그 도구를 반드시 부르게 한다(`toolChoice`). 도구 입력이 곧 출력 JSON이다.
+  - 스키마는 Bedrock 규칙에 맞게 손본다: object마다 `additionalProperties: false`, `minItems`는 0이나 1만, 길이·범위 제약은 뺀다.
   - 뺀 제약(예: 포트폴리오 4~8쪽)은 응답 검증과 1회 재시도가 그대로 잡는다.
-- **예열:** Bedrock은 새 스키마를 처음 받을 때 준비에 최대 90초가 걸리고 24시간 캐시한다. 그래서 다음과 같이 한다.
-  - 시작할 때와 12시간마다 출력 스키마별로 짧은 요청을 보낸다.
-  - 예열이 끝나야 `/health`가 `ready`가 된다.
-  - 실패하면 1분 뒤 다시 시도한다.
+- **시작:** 임베딩·LLM을 짧게 한 번씩 불러 키·권한·모델을 확인한 뒤 `/health`가 `ready`가 된다(약 1초). 실패하면 1분 뒤 다시 시도한다. 스키마 컴파일 대기가 없어 예열은 하지 않는다.
+- **재시도:** AI 서버는 Bedrock 호출을 다시 보내지 않는다(재시도는 BE가 1회). 평가 스크립트처럼 몰아서 부를 때만 `LLM_MAX_ATTEMPTS`·`EMBED_MAX_ATTEMPTS`를 올린다.
 - **임베딩:** Titan은 요청 1번에 문장 1개만 받는다. 항목마다 병렬로(동시 8건) 부르고 순서대로 돌려준다.
   - 질의·문서 접두어는 없다.
   - 문서는 제목을 본문 앞에 붙인다.
+
+## 측정 (2026-10-27, 실제 Bedrock)
+
+| 항목 | 결과 | 기존 기준 |
+| --- | --- | --- |
+| `embed_eval` (Titan) | hit@1 0.82, MRR 0.91 | embeddinggemma 0.82 · 0.86 |
+| `search_eval` (Titan) | 후보 재현율 1.00 (per_type) | 0.99 |
+| `revise_eval` (Nova 2 Lite) | 8/8 | p1_v4 8/8 |
+| `extract_eval` (Nova 2 Lite) | 묶음 26/28, 기술명 9/9 | p2_v2 26/28 · 9/9 |
+| `match_eval` (Nova 2 Lite) | 판정 일치율 **80%**, 큰 오류 1 | 목표 85%, Qwen3.5-4B 91% |
+| 응답 시간 | `/restructure` 2~3초, `/match` 2초, `/guide` 탭당 2~6초, `/embed` 0.1~0.6초 | 읽기 제한 안 |
+
+- `match` 오답은 대부분 정답이 "부분 충족"인 요건이다(낮게 8건, 높게 5건). 예: 기술 목록에 '학습 중'으로만 있으면 미충족으로 본다. 프롬프트 보완을 따로 잡는다.
 
 ## 검토한 다른 안
 
 | 안 | 버린 이유 |
 | --- | --- |
 | GPU 자체 서빙 유지 (ADR-0001·0005) | 구축·운영 부담, 켜는 시간 5~15분, Pod를 늘릴 수 없음 |
-| Claude(Anthropic API 직접 또는 Bedrock) | Anthropic API는 국외에서 처리됨. Bedrock 서울 In-Region은 일부 모델만 있고 JSON 스키마 강제가 없음 |
-| 임베딩 Cohere Embed v4 | 서울은 Global 교차 리전만 지원 → 국외에서 처리될 수 있음 |
+| Anthropic API 직접 호출 | 국외 처리, 별도 계약·결제 |
+| Bedrock의 Claude·GPT | 계정 이용 계약이 막혀 있음(위 표). 승인되면 다시 비교 |
+| 임베딩 Cohere Embed v4 | 서울은 Global 교차 리전만 지원, 계정 이용 계약도 막혀 있음 |
 | 임베딩 embeddinggemma-2를 CPU Pod로 유지 | 품질 측정이 끝나 있고 재임베딩이 필요 없지만, 모델 운영이 남는다. 팀 결정으로 Bedrock으로 통일 |
 | Titan 512차원 뒤에 0을 채워 768 유지 | 계약 변경은 피하지만 꼼수다. 어차피 재임베딩은 필요해 1024로 바꾸기로 함 |
 
 ## 결과와 위험
 
-- **품질:** 모델이 바뀌므로 다시 재야 한다.
-  - LLM: `revise_eval`(p1_v4 기준 8/8), `extract_eval`, `match_eval`, G1 지표.
-  - 임베딩: `embed_eval`·`search_eval`. embeddinggemma 기준은 hit@1 0.82, MRR 0.86, 후보 재현율 0.99.
-  - 결과는 AI PR에 적는다.
-- **Titan 한국어:** AWS는 Titan V2를 영어 최적화, 한국어 포함 100개 이상 언어는 미리보기로 안내한다. 검색 품질이 크게 떨어지면 이 ADR을 다시 연다.
-- **모델 종료:** DeepSeek-V3.1은 Bedrock에서 Legacy이고 **2027-03-30 종료**다.
-  - 그 전에 서울 In-Region에서 쓸 수 있는 후속 모델로 바꾼다.
-  - AI 서버 설정값 `LLM_MODEL`만 바꾸고 평가를 다시 돌린다. 응답의 `model` 값이 바뀌어 결과가 섞이지 않는다.
+- **국외 처리:** LLM(Nova 2 Lite Global)은 요청이 서울 밖 리전에서 처리될 수 있다. 개인정보 처리방침에 국외 이전(처리 위탁) 고지가 필요한지 BE-17·S01에서 검토한다. 아시아 안으로 묶어야 하면 APAC 프로필 Nova 모델로 바꾸고 평가를 다시 돌린다.
+  - Bedrock은 입력을 모델 학습에 쓰지 않고 모델 제공사와 공유하지 않는다.
+  - 임베딩(Titan)은 서울 안에서만 처리된다.
+- **호출 한도:** 지금 계정은 Nova 2 Lite가 분당 약 40건, Titan이 순간 약 67건 뒤 초당 약 1건이다(실측). 이 상태로는 동시 사용자가 조금만 늘어도 503이 난다. **운영 전에 Service Quotas 상향 요청이 필요하다.**
+- **품질:** `match` 일치율이 목표 85%에 못 미친다. 프롬프트 보완 또는 GPT-5.6-Luna 승인 후 비교로 정한다.
+- **Titan 한국어:** AWS는 Titan V2를 영어 최적화, 한국어 포함 100개 이상 언어는 미리보기로 안내한다. 측정 결과는 기존과 같거나 낫다. 크게 떨어지는 사례가 나오면 이 ADR을 다시 연다.
 - **비용:** GPU 노드 시간 요금 대신 토큰 요금을 낸다.
+  - Nova 2 Lite는 100만 토큰당 입력 약 $0.30, 출력 약 $2.50이다(집계 사이트 기준, AWS 요금표로 확인 필요). `/restructure` 1회(입력 약 1,500·출력 약 260토큰)는 약 $0.001이다.
   - Titan V2는 100만 토큰당 약 $0.02 수준이라 임베딩 비용은 무시할 만하다.
   - LLM 비용은 호출량에 비례하므로 AWS 예산 알림과 회원별 호출량 모니터링(기획서 8장)으로 관리한다.
-- **호출 한도:** Bedrock 분당 요청 수 한도에 걸리면 503이 되고 BE가 1회 재시도한다. 부족하면 한도 상향을 요청한다.
-- **개인정보:** 서울 리전 안에서만 처리되어 국외 이전은 없다. Bedrock은 입력을 모델 학습에 쓰지 않고 모델 제공사와 공유하지 않는다. 개인정보 처리방침의 처리 위탁 대상에 AWS를 적을지는 BE-17·S01에서 검토한다.
 
 ## 하지 않는 것
 
-- 교차 리전 추론(Geo·Global)
 - 여러 모델 동시 운영이나 자동 전환(fallback)
 - 로컬 GPU·vLLM 실행 경로. 로컬도 같은 Bedrock을 부른다.
+- OpenAI 호환 엔드포인트(`bedrock-mantle`). 호출이 멈추는 문제가 있어 쓰지 않는다.
