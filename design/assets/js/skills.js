@@ -1,4 +1,5 @@
-/* S02 기술스택 입력: 기술 이름 검색으로 추가, 숙련도 변경, 삭제 (카테고리는 보여 주지 않음, 기획서 v1.61) */
+/* S02 기술스택 입력: 기술 이름 검색으로 추가(사전에 없으면 직접 추가), "추가됨" 칩을 누르면 빼기, 숙련도 변경, 삭제
+   (카테고리는 보여 주지 않음, 기획서 v1.61) */
 (function () {
   'use strict';
   var esc = UI.esc, icon = UI.icon;
@@ -44,18 +45,26 @@
     }).map(function (d) { return d[0]; });
   }
 
+  // 추가했으면 "추가됨"(누르면 빼기), 아니면 "추가"
+  function chip(name, addLabel) {
+    if (hasSkill(name)) {
+      return '<button class="chip chip--added" data-unpick="' + esc(name) + '" aria-label="' + esc(name) + ' 추가됨, 누르면 빼기">' +
+        icon('check', 'i--sm i--bold') + esc(name) + ' 추가됨</button>';
+    }
+    return '<button class="chip chip--add" data-add="' + esc(name) + '" aria-label="' + esc(addLabel || name) + ' 추가">' +
+      icon('plus', 'i--sm') + esc(addLabel ? addLabel + ' 추가' : name) + '</button>';
+  }
+
   function render() {
     var q = state.query.trim();
     var found = q ? search(q) : [];
+    // 검색어와 이름이 같은 결과가 없으면 검색어 그대로 추가하는 칩을 붙인다
+    var exact = found.some(function (n) { return n.toLowerCase() === q.toLowerCase(); });
     $label.textContent = q ? '"' + q + '" 검색 결과 ' + found.length + '개' : '기술 이름을 입력하면 표준 사전에서 찾아 줘요';
-    if (q && !found.length) {
-      $results.innerHTML = '<p style="font-size: 14px; color: var(--subtle)">표준 사전에서 찾지 못했어요. 다른 이름으로 검색해 보세요.</p>';
-    } else {
-      $results.innerHTML = found.map(function (name) {
-        if (hasSkill(name)) return '<span class="chip chip--added">' + icon('check', 'i--sm i--bold') + esc(name) + ' 추가됨</span>';
-        return '<button class="chip chip--add" data-add="' + esc(name) + '" aria-label="' + esc(name) + ' 추가">' + icon('plus', 'i--sm') + esc(name) + '</button>';
-      }).join('');
-    }
+    $results.innerHTML =
+      (q && !found.length ? '<p style="font-size: 14px; color: var(--subtle); width: 100%">표준 사전에서 찾지 못했어요. 입력한 이름 그대로 추가할 수 있어요.</p>' : '') +
+      found.map(function (name) { return chip(name); }).join('') +
+      (q && !exact ? chip(q, '"' + q + '" 직접') : '');
 
     $count.textContent = state.skills.length;
     $rows.innerHTML = state.skills.map(function (s, i) {
@@ -79,6 +88,10 @@
     if (!t) return;
     if (t.dataset.add) {
       state.skills.push({ name: t.dataset.add, level: 1 });
+      render();
+    }
+    else if (t.dataset.unpick) {
+      state.skills = state.skills.filter(function (s) { return s.name !== t.dataset.unpick; });
       render();
     }
     else if (t.dataset.level) { state.skills[+t.dataset.row].level = +t.dataset.level; render(); }
