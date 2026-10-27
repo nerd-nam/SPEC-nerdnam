@@ -89,8 +89,14 @@
         </fieldset>
 
         <fieldset class="stack" style="gap: 10px">
-          <legend style="margin-bottom: 4px; font-size: 14px; font-weight: 600">이 회사에서 쓴 기술 <span class="label__hint" style="font-weight: 400">· 기술스택에서 선택</span></legend>
+          <legend style="margin-bottom: 4px; font-size: 14px; font-weight: 600">이 회사에서 쓴 기술 <span class="label__hint" style="font-weight: 400">· <span id="tech-count">0</span>개 선택</span></legend>
           <div class="row" id="tech-chips"></div>
+          <div class="row">
+            <label for="new-tech" class="sr-only">기술스택에 없는 기술 추가</label>
+            <input id="new-tech" class="input" placeholder="기술스택에 없는 기술 (예: Spring Cloud Gateway)" style="flex: 1 1 260px; width: auto">
+            <button class="btn" id="new-tech-add">추가</button>
+          </div>
+          <p class="page-meta" style="font-size: 13px">여기서 새로 추가한 기술은 기술스택에도 “학습 중”으로 함께 저장돼요. 숙련도는 <a href="skills.html" style="font-weight: 600">기술스택 화면</a>에서 바꿀 수 있어요.</p>
         </fieldset>
 
         <div class="row row--end" style="padding-top: 8px; border-top: 1px solid var(--line); gap: 10px">
