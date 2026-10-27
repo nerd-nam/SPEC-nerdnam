@@ -33,7 +33,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/EmbedResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '422':
           description: Validation Error
           content:
@@ -58,7 +58,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestructureResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '502':
           description: LLM 출력 형식 오류 (AI_ERROR)
         '504':
@@ -87,7 +87,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExtractResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '502':
           description: LLM 출력 형식 오류 (AI_ERROR)
         '504':
@@ -116,7 +116,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MatchResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '502':
           description: LLM 출력 형식 오류 (AI_ERROR)
         '504':
@@ -145,7 +145,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GapGuideResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '502':
           description: LLM 출력 형식 오류 (AI_ERROR)
         '504':
@@ -174,7 +174,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GuideResponse'
         '503':
-          description: 모델 준비 안 됨 (GPU_UNAVAILABLE)
+          description: 모델 준비 안 됨·Bedrock 사용 불가 (GPU_UNAVAILABLE)
         '502':
           description: LLM 출력 형식 오류 (AI_ERROR)
         '504':
