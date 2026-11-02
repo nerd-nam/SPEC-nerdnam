@@ -8,12 +8,12 @@ info:
 
     - 실패: 연결 실패·연결 시간 초과·503 → `GPU_UNAVAILABLE`(1회 재시도), 읽기 시간 초과 → `TIMEOUT`(재시도 안 함), AI 서버의 504 → `TIMEOUT`(재시도 안 함), 422 → `AI_ERROR`(재시도 안 함), 그 밖 5xx → `AI_ERROR`(1회 재시도).
 
-    - 타임아웃: 연결 2초. 읽기 `/health` 2초 · `/embed` 10초 · `/requirements/extract` 20초 · `/restructure` 30초 · `/match` 30초 · `/gap-guide` 20초 · `/guide` 120초.
+    - 타임아웃: 연결 2초. 읽기 `/health` 2초 · `/embed` 120초 · `/requirements/extract` 120초 · `/restructure` 180초 · `/match` 300초 · `/gap-guide` 120초 · `/guide` 300초. AI 서버는 엔드포인트마다 읽기 제한보다 10초 먼저 스스로 끝내고 503(대기·호출 한도)·504(생성 시간 초과)를 `usage`와 함께 준다.
 
     - `/guide`는 탭마다 1회 호출, JSON 응답(SSE 아님).
 
     '
-  version: 0.4.0
+  version: 0.4.1
 paths:
   /embed:
     post:
