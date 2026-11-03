@@ -133,7 +133,7 @@ histogram_quantile(0.95, sum by (le, kind) (rate(nerdnam_ai_bedrock_queue_wait_s
 - **BE 큐에서 기다리는 작업 (해소, BE PR #57):** AI가 기다리면 BE 작업 스레드 4개가 막히고 뒤 작업은 BE 큐에서 기다린다. `stale-after`는 접수 시각부터 재므로 큐에서 기다리기만 한 작업이 실패로 지워지고, 지운 작업도 차례가 오면 Bedrock을 한 번 더 불렀다(한도에 걸린 바로 그때). BE가 정리 대상에서 그 Pod가 들고 있는 작업을 빼고, 이미 끝난 작업은 AI를 부르지 않게 고쳤다.
 - **BE 임베딩과 사용자 작업:** 문서 임베딩(`/embed`, 32건씩 최대 20번)도 같은 작업 스레드를 쓴다. 배치마다 마감(110초)까지 기다리면 스레드를 오래 잡으므로, 사용자 작업이 밀리면 BE에서 둘을 나눈다.
 - **한도는 고정:** 상향이 어려워 남은 실패(40건 몰림에 약 5건)는 계정 한도 그대로 남는다. 몰림이 이보다 커지면 실패가 다시 늘어나므로, 알림(아래)으로 지켜본다. BE 한 대는 AI에 동시에 최대 4개만 보내므로(`nerdnam.ai-job.threads`) 보내는 속도는 이미 BE가 제한하고 있다. 사용자가 늘면 이 대기가 AI 실패 대신 BE 큐 대기로 나타난다.
-- **운영 환경 재현:** AI 지표 수집(ServiceMonitor·NetworkPolicy)과 Grafana "Bedrock (AI 서버)" 패널은 INFRA main에 이미 있다. 운영 AI 이미지가 아직 #45까지라 지금이 "전" 상태이므로, 아래 부록 절차로 "전" → AI #46 이미지 배포 → "후"를 재현해 Grafana 화면을 이 문서에 붙인다. 이번에는 원인 비교를 위해 AI에 직접 보낸다. 사용자 쪽 대기까지 보려면 BE를 거쳐야 하는데(BE 한 대가 동시 4개만 보내고, 작성 방향 탭 5개는 BE 작업 5개로 나뉘어 4개씩 돈다), 테스트 계정·데이터·비용이 들어 다음으로 미룬다.
+- **운영 환경 재현:** AI 지표 수집과 Grafana "Bedrock (AI 서버)"·"AI 작업" 패널은 INFRA main에 있다. 운영은 서비스 경로 그대로(k6 → BE → AI → Bedrock) 재현하고, AI만 따로 부르는 시험은 하지 않는다. 시나리오·판정 지표·역할은 아래 부록(팀 확인 중).
 - **알림 기준 (INFRA 제안):**
 
 | 알림 | 조건 (제안) |
@@ -144,26 +144,74 @@ histogram_quantile(0.95, sum by (le, kind) (rate(nerdnam_ai_bedrock_queue_wait_s
 
 함께 볼 BE 지표(관리 포트 `/actuator/prometheus`): `nerdnam_aijob_queue_size`(BE 큐 길이), `nerdnam_aijob_threads_active`(돌고 있는 작업 수). AI가 기다리는 동안 BE 큐가 얼마나 밀리는지 보인다.
 
-## 부록: 운영(EKS) 재현 절차
+## 부록: 운영(E2E) 재현 계획 — 팀 확인 중
 
-공용 Bedrock 계정이라 실행 전 팀에 알린다. 스크립트는 AI 레포 `scripts/burst.sh`(`/match` N건을 한꺼번에 보내고 응답 코드·시간·지표 증가분 출력).
+운영에서 실제로 생기는 저하·장애를 **서비스 경로 그대로**(k6 → BE → AI → Bedrock) 재현한다. AI만 따로 부르는 시험은 하지 않는다. 운영에서는 BE가 AI에 동시 4작업만 보내므로(작업 스레드 4, 큐 200) AI만 몰아 부르는 상황은 생기지 않기 때문이다. 공용 Bedrock 계정이라 실행 전 팀에 알린다.
 
-1. **전:** 운영 AI 이미지가 #46 이전(대기 5초, throttle 재시도 없음)인지 확인한다(INFRA `gitops/apps/images.yaml`의 `ai` 주석).
-2. 부하를 준다. ai는 NetworkPolicy로 api·prometheus만 들어오므로 port-forward로 보낸다.
-   ```bash
-   kubectl -n nerdnam port-forward svc/ai 18001:8000 &
-   scripts/burst.sh http://localhost:18001 40   # 시작·끝 시각(UTC)이 출력된다
-   ```
-3. **후:** INFRA가 AI #46 이미지(c9a422a 이후)를 배포한 뒤, 90초 이상 지나 같은 명령을 다시 실행한다.
-4. 화면을 남긴다. 시간 범위는 각 실행의 시작 −2분 ~ 끝 +5분.
+### 운영 구조 (요청이 거치는 순서)
 
-| 어디서 | 무엇 | 보는 것 |
+| 단계 | 상한 | 넘치면 |
 | --- | --- | --- |
-| Grafana "nerdnam 서비스" → "Bedrock (AI 서버)" | Bedrock 호출 (종류·결과별, 분당) | 전: `throttle` 막대, 후: 줄어든 `throttle`과 늘어난 `ok` |
-| 같은 줄 | 재시도 비율 (시도 ÷ 호출) | 전 1.0, 후 1보다 큼 (한도에 걸려 다시 보냄) |
-| 같은 줄 | 대기열 대기 p95·거절 | 전: 거절, 후: 대기는 길어지고 거절은 줄어듦 |
-| 같은 줄 | AI 요청 p95 (경로별) | `/match` 응답이 몰릴 때 늘어나는 정도 |
-| Grafana Explore → Loki | `{namespace="nerdnam", app="ai"} \|= "bedrock llm"` | `ThrottlingException`·`busy`·`throttle retry` 줄 수가 지표와 같은지 |
-| Grafana Explore → Tempo | `{ span.bedrock.result = "throttle" }` | 요청 하나를 열어 `bedrock.queue` → `bedrock.converse` 순서로 어디서 실패했는지 |
+| BE 작업 스레드 | 동시 4작업, 큐 200 (문서 임베딩도 같이 씀) | BE 큐에서 대기. 큐가 차면 `INTERNAL` 실패 |
+| AI 대기열 | LLM 동시 8 + 대기 32 / 임베딩 스레드 8 | 운영에서는 BE가 4작업만 보내 거의 안 참 |
+| Bedrock | **Nova 분당 20번**, **Titan 분당 60번** | throttle → AI 재시도(Nova 2번, Titan 문장마다 최대 8번) → 503 → BE 즉시 1회 재시도 → `FAILED(GPU_UNAVAILABLE)` |
 
-확인할 것: 스크립트의 503 수 = 지표의 `throttle` + 대기열 거절(전), 로그 줄 수와 일치.
+- 분석 1건(요건 20개) = **Titan 20번**(요건 질의 임베딩) + Nova 약 4번
+- 작성 방향 1건 = 탭 5개 = **Nova 5번**
+
+### 시나리오 A — 분석 몰림 (Titan 한도, 장애형)
+
+| 항목 | 내용 |
+| --- | --- |
+| 요청 | 요건 20개 공고 분석, 분당 2건(정상) vs **분당 5건**(몰림), 각 5분 |
+| 경계 | 분당 3건 = Titan 분당 60번에 딱 맞음. 4건부터 넘침 |
+| 일어나는 일 | 분당 60번 초과 → Titan 재시도로 `/embed`가 길어짐 → 110초 예산 초과 503 → 분석 실패 |
+| 예상 (시뮬레이션) | 분당 3건: 실패 0%, p95 18초 / 4건: 실패 35%, p95 111초 / 5건: 실패 약 64% |
+| 보이는 모습 | ① BE 최근 실패 수 급증 ② `invoke_model` throttle ③ trace에서 `/embed` span이 길거나 실패 |
+
+### 시나리오 B — 작성 방향 몰림 (Nova 한도, 저하형)
+
+| 항목 | 내용 |
+| --- | --- |
+| 요청 | 작성 방향, 분당 3건(탭 15개, 정상) vs **분당 6건**(탭 30개, 몰림), 각 5분 |
+| 경계 | Nova 분당 20번 = 작성 방향 분당 4건 |
+| 일어나는 일 | Nova 한도가 처리 속도를 묶음 → 작업이 길어짐 → BE 큐 대기가 쌓임. 실패는 거의 없음 |
+| 예상 (시뮬레이션) | 분당 3건: p50 12초, p95 15초 / 6건: p50 75초, p95 133초, 실패 약 0% |
+| 보이는 모습 | ① BE 큐 10 이상 지속, 실패는 없음 ② `converse` throttle, 호출 수가 분당 20 근처에서 평평 ③ trace에서 `/guide` span에 `bedrock.attempts > 1` |
+
+### 한도 없이 대기만 생기는 저하는 다루지 않는다
+
+BE 스레드 4개는 분석 분당 약 15건·작성 방향 분당 약 20건을 처리할 수 있지만, 계정 한도는 그 1/5(분석 3건·작성 방향 4건)에서 먼저 걸린다. 그래서 운영의 대기형 저하는 늘 "한도로 작업이 길어짐 → BE 큐 대기"로 나타나며, 시나리오 B가 그 경우다. 한도 없이 대기만 만들려면 BE 스레드를 줄이는 등 운영과 다른 설정이 필요해 제외한다.
+
+### 판정 지표 3개
+
+| # | 지표 | Grafana | 기준 |
+| --- | --- | --- | --- |
+| 1. 증상 | BE 큐 길이·최근 실패 수 (`nerdnam_aijob_queue_size`, `nerdnam_aijob_failed_recent`) | 서비스 → AI 작업 | 큐 10 이상 지속 = 저하, 5분 실패 3건 초과 = 장애 |
+| 2. 원인 | Bedrock 호출 종류·결과별 분당 (`nerdnam_ai_bedrock_calls_total` by `operation`, `result`) | 서비스 → Bedrock (AI 서버) | `converse` throttle = Nova(분당 20 근처), `invoke_model` throttle = Titan(분당 60 근처). throttle이 없으면 한도는 원인이 아님 |
+| 3. 확인 | 느리거나 실패한 작업 trace 1건 | Explore → Tempo `{ span.bedrock.result = "throttle" }` | 길어진 구간이 `/embed`(Titan)인지 `/match`·`/guide`(Nova)인지, `bedrock.attempts > 1` |
+
+1에서 이상 → 2로 원인 모델 → 3으로 한 건 확인. 2에 throttle이 없으면 그때만 AI 대기열 대기·경로별 p95를 본다.
+
+### 실행 순서
+
+1. 경계 확인: 분석 분당 3·4건, 작성 방향 분당 4·6건을 각 2분 (위 수치는 호출 시간·한도 동작을 가정한 시뮬레이션 근사)
+2. 본 실행: A·B 각 5분, 정상 → 몰림 순. 같은 조건을 다시 돌릴 때는 90초 이상 띄운다
+3. 지표 3개 화면과 k6 결과를 이 문서에 추가
+
+### 준비와 역할 (확인 필요)
+
+| 할 일 | 담당 |
+| --- | --- |
+| 시험 계정, 확정 프로젝트, **요건 20개 공고 여러 개**(같은 공고는 동시에 하나만 분석) | BE |
+| k6에 AI 경로 시나리오 추가: 분석 시작·작성 방향 탭 생성 → `GET /api/ai-jobs/{id}` 2.5초 폴링 → 완료 시간·실패 이유를 k6 지표로 | INFRA (`gitops/load`) |
+| 실행(k6 TestRun), Grafana 화면 저장 | INFRA + AI |
+| 운영 AI 이미지: 지금 12ec61a(#45). "전" 실행 → #46 배포 → "후" 실행. 자동 배포 PR(AI #48) 머지는 "전" 실행 뒤로 | INFRA |
+| 공용 Bedrock 계정 사용 공지, 실행 시간대 다른 사용 중지 | 전원 |
+| 결과·화면을 이 문서에 추가 | AI |
+
+### 알려진 빈틈
+
+- BE 작업 완료 시간·실패 이유별 수는 지표가 없다 → k6 완료 시간 지표, BE 로그 `AI job … failed: {이유} ({엔드포인트})`로 본다.
+- AI `queue_rejected{kind="embed"}`는 임베딩 대기열 꽉 참과 110초 예산 초과를 합친다 → AI 로그 `busy pending=`·`over budget`으로 나눈다.
+- 계정 전체 호출(다른 사용)은 AI 지표에 안 보인다 → 실행 시간대 공지로 대신한다.
