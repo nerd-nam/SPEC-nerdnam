@@ -133,7 +133,7 @@ histogram_quantile(0.95, sum by (le, kind) (rate(nerdnam_ai_bedrock_queue_wait_s
 - **BE 큐에서 기다리는 작업 (해소, BE PR #57):** AI가 기다리면 BE 작업 스레드 4개가 막히고 뒤 작업은 BE 큐에서 기다린다. `stale-after`는 접수 시각부터 재므로 큐에서 기다리기만 한 작업이 실패로 지워지고, 지운 작업도 차례가 오면 Bedrock을 한 번 더 불렀다(한도에 걸린 바로 그때). BE가 정리 대상에서 그 Pod가 들고 있는 작업을 빼고, 이미 끝난 작업은 AI를 부르지 않게 고쳤다.
 - **BE 임베딩과 사용자 작업:** 문서 임베딩(`/embed`, 32건씩 최대 20번)도 같은 작업 스레드를 쓴다. 배치마다 마감(110초)까지 기다리면 스레드를 오래 잡으므로, 사용자 작업이 밀리면 BE에서 둘을 나눈다.
 - **한도는 고정:** 상향이 어려워 남은 실패(40건 몰림에 약 5건)는 계정 한도 그대로 남는다. 몰림이 이보다 커지면 실패가 다시 늘어나므로, 알림(아래)으로 지켜본다. BE 한 대는 AI에 동시에 최대 4개만 보내므로(`nerdnam.ai-job.threads`) 보내는 속도는 이미 BE가 제한하고 있다. 사용자가 늘면 이 대기가 AI 실패 대신 BE 큐 대기로 나타난다.
-- **운영 환경 재현:** AI #44가 배포되고 INFRA#2(ServiceMonitor·NetworkPolicy)가 적용되면 EKS에서 다시 재현해 Grafana 화면을 이 문서에 붙인다. 위 재현은 AI에 직접 40건을 보냈지만, 운영에서는 BE 한 대가 동시 4개만 보내므로 **BE를 거쳐**(분석·작성 방향 동시 요청) 부하를 주고 사용자 쪽 대기까지 본다. 작성 방향 탭 5개는 BE 작업 5개로 나뉘어 4개씩 돈다.
+- **운영 환경 재현:** AI 지표 수집(ServiceMonitor·NetworkPolicy)과 Grafana "Bedrock (AI 서버)" 패널은 INFRA main에 이미 있다. 운영 AI 이미지가 아직 #45까지라 지금이 "전" 상태이므로, 아래 부록 절차로 "전" → AI #46 이미지 배포 → "후"를 재현해 Grafana 화면을 이 문서에 붙인다. 이번에는 원인 비교를 위해 AI에 직접 보낸다. 사용자 쪽 대기까지 보려면 BE를 거쳐야 하는데(BE 한 대가 동시 4개만 보내고, 작성 방향 탭 5개는 BE 작업 5개로 나뉘어 4개씩 돈다), 테스트 계정·데이터·비용이 들어 다음으로 미룬다.
 - **알림 기준 (INFRA 제안):**
 
 | 알림 | 조건 (제안) |
@@ -143,3 +143,27 @@ histogram_quantile(0.95, sum by (le, kind) (rate(nerdnam_ai_bedrock_queue_wait_s
 | AI 대기열 거절 | `queue_rejected_total` 증가 > 0, 5분 지속 |
 
 함께 볼 BE 지표(관리 포트 `/actuator/prometheus`): `nerdnam_aijob_queue_size`(BE 큐 길이), `nerdnam_aijob_threads_active`(돌고 있는 작업 수). AI가 기다리는 동안 BE 큐가 얼마나 밀리는지 보인다.
+
+## 부록: 운영(EKS) 재현 절차
+
+공용 Bedrock 계정이라 실행 전 팀에 알린다. 스크립트는 AI 레포 `scripts/burst.sh`(`/match` N건을 한꺼번에 보내고 응답 코드·시간·지표 증가분 출력).
+
+1. **전:** 운영 AI 이미지가 #46 이전(대기 5초, throttle 재시도 없음)인지 확인한다(INFRA `gitops/apps/images.yaml`의 `ai` 주석).
+2. 부하를 준다. ai는 NetworkPolicy로 api·prometheus만 들어오므로 port-forward로 보낸다.
+   ```bash
+   kubectl -n nerdnam port-forward svc/ai 18001:8000 &
+   scripts/burst.sh http://localhost:18001 40   # 시작·끝 시각(UTC)이 출력된다
+   ```
+3. **후:** INFRA가 AI #46 이미지(c9a422a 이후)를 배포한 뒤, 90초 이상 지나 같은 명령을 다시 실행한다.
+4. 화면을 남긴다. 시간 범위는 각 실행의 시작 −2분 ~ 끝 +5분.
+
+| 어디서 | 무엇 | 보는 것 |
+| --- | --- | --- |
+| Grafana "nerdnam 서비스" → "Bedrock (AI 서버)" | Bedrock 호출 (종류·결과별, 분당) | 전: `throttle` 막대, 후: 줄어든 `throttle`과 늘어난 `ok` |
+| 같은 줄 | 재시도 비율 (시도 ÷ 호출) | 전 1.0, 후 1보다 큼 (한도에 걸려 다시 보냄) |
+| 같은 줄 | 대기열 대기 p95·거절 | 전: 거절, 후: 대기는 길어지고 거절은 줄어듦 |
+| 같은 줄 | AI 요청 p95 (경로별) | `/match` 응답이 몰릴 때 늘어나는 정도 |
+| Grafana Explore → Loki | `{namespace="nerdnam", app="ai"} \|= "bedrock llm"` | `ThrottlingException`·`busy`·`throttle retry` 줄 수가 지표와 같은지 |
+| Grafana Explore → Tempo | `{ span.bedrock.result = "throttle" }` | 요청 하나를 열어 `bedrock.queue` → `bedrock.converse` 순서로 어디서 실패했는지 |
+
+확인할 것: 스크립트의 503 수 = 지표의 `throttle` + 대기열 거절(전), 로그 줄 수와 일치.
