@@ -13,6 +13,7 @@ nerdnam(AI 맞춤형 지원서 코치) 프로젝트의 공용 문서 레포지�
 | `contracts/` | 서버 간 API 계약 (OpenAPI). `api-ai.openapi.yaml`은 AI 레포 `app/schemas.py`에서 내보냄 (`scripts/export_contract.py`). `web-api.openapi.yaml`은 BE 레포의 실제 컨트롤러에서 내보냄 (`./gradlew exportWebApiContract`) | 경계를 맞대는 두 담당 |
 | `fixtures/` | 세 레포가 함께 쓰는 예시 데이터 (`fixtures/README.md`) | 전원 |
 | `adr/` | 설계 결정 기록 (`0001-gpu-model-serving.md`, `0002-project-registration-rules.md`, `0003-report-diagnosis-gap-guide.md`, `0004-remove-project-image.md`, `0005-eks-serving.md`, `0006-requirement-verdict-criteria.md`, `0007-bedrock-serving.md`, `0008-bedrock-throttle-handling.md`) | 전원 |
+| `docs/` | 프로젝트 산출물 문서 (`관측-운영-설계.md`: 주요 관측 지표·정상 운영 기준·서비스·인프라·AI 서빙 관측 구조) | 전원 |
 
 ## 화면 디자인 보는 법
 
