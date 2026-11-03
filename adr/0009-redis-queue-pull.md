@@ -4,7 +4,7 @@
 - 날짜: 2026-11-03
 - 담당: AI. BE(큐 경로·결과 대기·trace 전달)·INFRA(큐 Redis·네트워크·권한·대시보드) 검토 필요
 - 관련: ADR-0008(실패 대신 대기, "Redis 큐 기각"을 이 ADR이 뒤집음), ADR-0005(클러스터 안 Redis), 기획서 5.5 "메시지 큐는 쓰지 않는다"·8장 리스크 표·v1.65 요청 마감, nerd-nam/INFRA-nerdnam#19(운영 재현 결과), #101(INFRA #32 검토 질문)
-- 구현: AI nerd-nam/AI-nerdnam#54(작업자), BE nerd-nam/BE-nerdnam#68(큐 경로, B안), INFRA nerd-nam/INFRA-nerdnam#32(큐 Redis)
+- 구현: AI nerd-nam/AI-nerdnam#54(작업자)·#55(한도기), BE nerd-nam/BE-nerdnam#68(큐 경로, B안), INFRA nerd-nam/INFRA-nerdnam#32(큐 Redis)
 
 ## 배경
 
@@ -66,7 +66,7 @@
 
 스트림은 `XACK` 해도 메시지를 지우지 않는다. 정리하지 않으면 256MB에 닿아 `noeviction`으로 새 작업을 넣지 못한다.
 
-- **요청 `ai:req:*`**: AI가 **어떻게 끝나든 메시지마다 마지막에 `XACK` + `XDEL`**(`MULTI`) 한다. 결과를 보낸 경우, 중복, 형식 깨짐, 오래됨이 모두 해당한다.
+- **요청 `ai:req:*`**: AI가 **어떻게 끝나든 메시지마다 마지막에 `XACK` + `XDEL`** 한다. 결과를 보낸 경우, 중복, 형식 깨짐, 오래됨이 모두 해당한다. 트랜잭션(`MULTI`/`EXEC`)은 쓰지 않고 결과 → 완료 표시 → `XACK`·`XDEL` 순서로 보낸다. 중간에 죽으면 회수·완료 표시·BE 중복 무시로 결과가 맞다.
   - `MAXLEN ~` 안전망은 두지 않는다. 처리 전 메시지가 잘리면 "큐 대기는 실패가 아니다"와 어긋나고, 본문이 수십 KB라 개수 상한보다 메모리에 먼저 닿는다.
 - **결과 `ai:res:{Pod}`**: BE가 읽은 뒤 `XDEL` 한다. 키 만료 1시간을 BE(읽을 때)와 AI(쓸 때) 둘 다 건다. 내려간 Pod의 스트림이 남지 않는다.
 - **메모리 보호**: BE가 접수 단계에서 `XLEN(ai:req:llm) + XLEN(ai:req:embed)`(처리 중 포함)이 200 이상이면 바로 거절한다(`AI_UNAVAILABLE`, "잠시 뒤 다시 시도"). 그 밖에는 `noeviction` + 메모리 경고가 막는다.
@@ -80,7 +80,7 @@
 | --- | --- | --- |
 | api | `%W~ai:req:*` | `XADD`, `XLEN`(접수 거절) |
 | api | `~ai:res:*` | `XREAD`, `XDEL`, `EXPIRE` |
-| ai | `~ai:req:*` | `XGROUP CREATE`, `XREADGROUP`, `XACK`, `XDEL`, `XAUTOCLAIM`, `XCLAIM`, `XLEN`, `XINFO GROUPS`, `MULTI`·`EXEC` |
+| ai | `~ai:req:*` | `XGROUP CREATE`, `XREADGROUP`, `XACK`, `XDEL`, `XAUTOCLAIM`, `XCLAIM`, `XLEN`, `XINFO GROUPS` |
 | ai | `%W~ai:res:*` | `XADD`, `EXPIRE` |
 | ai | `~ai:run:*` | `SET` |
 | 둘 다 | — | `PING`, `HELLO`·`AUTH` |
@@ -103,7 +103,7 @@
 | `nerdnam_ai_queue_pending` 게이지 | `stream`, `model` | 꺼냈지만 끝나지 않은 작업이 몇 건인가 |
 | `nerdnam_ai_inflight` 게이지 | `model`, `stage`=`limiter`·`bedrock` | 지금 어디서 기다리나(한도기 / Bedrock 응답). `limiter`는 한도기와 함께 나온다 |
 | `nerdnam_ai_stage_seconds` 히스토그램 | `model`, `stage`=`queue`·`limiter`·`bedrock` | 이 모델은 어느 단계에서 기다리나 (p95). `limiter`는 한도기와 함께 나온다 |
-| `nerdnam_ai_queue_up` 게이지 | — | 큐 Redis에 붙어 있나 |
+| `nerdnam_ai_queue_up` 게이지 | — | 큐 Redis에 붙어 있나. `AI_QUEUE_ENABLED=true`일 때만 나온다(꺼짐과 끊김 구분) |
 
 - `model`: Bedrock 지표와 같은 모델 id. `stream`=`llm` → Nova, `embed`·`embed-bg` → Titan.
 - **lag 계산**: 처리한 메시지는 지우므로 `XLEN` = 안 꺼낸 것 + pending이다. lag = `XLEN` − `XINFO GROUPS`의 `pending`. `XINFO GROUPS`의 `lag` 필드는 방금 전달한 항목을 `XDEL`하면 null이 될 수 있어 쓰지 않는다.
@@ -149,8 +149,8 @@ nerd-nam/INFRA-nerdnam#19와 같은 부하로 다시 측정한다. "완료 시�
 
 | 할 일 | 담당 | 상태 |
 | --- | --- | --- |
-| 큐 작업자(`reply_to` 결과, 같은 `id` 한 번만, 503 다시 하기, 정리), 큐 지표·`queue.wait` span | AI | nerd-nam/AI-nerdnam#54 |
-| 한도기(호출마다), `limiter` 단계 지표 | AI | 할 일 |
+| 큐 작업자(`reply_to` 결과, 같은 `id` 한 번만, 503 다시 하기, 정리), 큐 지표·`queue.wait` span | AI | nerd-nam/AI-nerdnam#54 (main) |
+| 한도기(호출마다, Nova 20·Titan 60회/분, 한도만큼 바로 → 일정 속도, HTTP·큐 공용), `limiter` 단계 지표·`limiter.wait` span | AI | nerd-nam/AI-nerdnam#55 (main) |
 | 큐 넣기·결과 대기(B안)·`traceparent` 전달·같은 `id` 다시 넣기·접수 거절·문서 임베딩 스트림 분리 | BE | nerd-nam/BE-nerdnam#68 |
 | 큐 전용 Redis(`noeviction`, 디스크 저장 끔, exporter), NetworkPolicy·ACL(위 표), Secret, 대시보드 패널, 멈춤 알림 | INFRA | nerd-nam/INFRA-nerdnam#32 |
 | 운영 재시험(nerd-nam/INFRA-nerdnam#19와 같은 부하, 위 성공 기준) | INFRA·AI | 전환 뒤 |
